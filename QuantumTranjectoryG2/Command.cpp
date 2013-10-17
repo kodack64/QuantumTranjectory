@@ -1,4 +1,6 @@
 
+#pragma warning(disable : 4819)
+
 #include "Command.h"
 #include "Simulator.h"
 #include "ParameterSet.h"

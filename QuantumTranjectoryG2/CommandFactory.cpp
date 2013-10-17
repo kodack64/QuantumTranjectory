@@ -1,4 +1,6 @@
 
+#pragma warning(disable : 4290)
+
 #include "CommandFactory.h"
 #include <functional>
 #include <boost\algorithm\string.hpp>

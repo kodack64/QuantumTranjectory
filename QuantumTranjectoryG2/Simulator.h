@@ -10,8 +10,17 @@ class Random;
 class Simulator{
 private:
 	virtual void init(ParameterSet*);
+	virtual void loadParameter(ParameterSet*);
+	virtual void initParameter();
 	virtual void run();
+	virtual void calcLiuville();
+	virtual void calcLindblad();
 	virtual void close();
+
+	inline int getIdToPG(int i){return (i%indAE)/indPG;}
+	inline int getIdToAE(int i){return (i%indPF)/indAE;}
+	inline int getIdToPF(int i){return (i%indAF)/indPF;}
+	inline int getIdToAF(int i){return (i%vecSize)/indAF;}
 
 	int maxPG;
 	int maxAE;
@@ -30,6 +39,7 @@ private:
 	double dt;
 	int div;
 	long maxstep;
+	int step;
 
 	//	input
 	double pump;
