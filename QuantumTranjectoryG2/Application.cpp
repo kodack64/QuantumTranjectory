@@ -7,10 +7,19 @@
 #include "ParameterSet.h"
 #include "Command.h"
 
+using namespace std;
+
+Application::~Application(){
+	delete inter;
+	delete simulator;
+	delete parameter;
+}
+
 void Application::start(){
 	inter = new InteractiveInterpreter();
 	simulator = new Simulator();
 	parameter = new ParameterSet();
+
 	loadCommand();
 	while(true){
 		consumeCommand();
@@ -21,15 +30,26 @@ void Application::start(){
 
 void Application::loadCommand(){
 	for(int i=1;i<_argv;i++){
-		inter->loadFile(_argc[i]);
+		inter->loadFile(commandArray,_argc[i]);
 	}
 }
+
 void Application::consumeCommand(){
-	Command* com = inter->pop();
-	com->execute(simulator,parameter);
+	Command* com;
+	while(commandArray.empty()){
+		com = commandArray.front();
+		if(com!=NULL){
+			com->execute(simulator,parameter,commandArray);
+			delete com;
+		}else{
+			break;
+		}
+		commandArray.pop();
+	}
 }
+
 void Application::waitCommand(){
 	string command;
 	getline(cin,command);
-	inter->load(command);
+	inter->load(commandArray,command);
 }

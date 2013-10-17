@@ -5,27 +5,20 @@
 #include <string>
 using namespace std;
 
+class ParameterNotFound{};
+
 class ParameterSet{
 private:
-	map <string,int> intParam;
-	map <string,double> doubleParam;
+	map <string,string> param;
 public:
-	virtual int getIntParam(string str){
-		if(intParam.find(str)!=intParam.end()){
-			return intParam[str];
+	virtual string getParam(string str){
+		if(param.find(str)!=param.end()){
+			return param[str];
+		}else{
+			throw new ParameterNotFound();
 		}
-		return -1;
 	}
-	virtual double getDoubleParam(string str){
-		if(doubleParam.find(str)!=doubleParam.end()){
-			return doubleParam[str];
-		}
-		return -1;
-	}
-	virtual void setParam(string str,double val){
-		doubleParam[str]=val;
-	}
-	virtual void setParam(string str,int val){
-		intParam[str]=val;
+	virtual void setParam(string str,string val){
+		param[str]=val;
 	}
 };

@@ -2,9 +2,14 @@
 
 #pragma once
 
+#include <queue>
+
+using namespace std;
+
 class InteractiveInterpreter;
 class Simulator;
 class ParameterSet;
+class Command;
 
 class Application{
 private:
@@ -13,6 +18,7 @@ private:
 	Simulator* simulator;
 	ParameterSet* parameter;
 	InteractiveInterpreter* inter;
+	queue<Command*> commandArray;
 
 	virtual void loadCommand();
 	virtual void consumeCommand();
@@ -23,5 +29,6 @@ public:
 		_argv=argv;
 		_argc=argc;
 	}
+	virtual ~Application();
 	virtual void start();
 };

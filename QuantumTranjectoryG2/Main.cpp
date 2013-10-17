@@ -1,20 +1,8 @@
 
-#pragma warning(disable : 4996)
-#pragma warning(disable : 4819)
+#pragma warning(disable : 4996) // disable stdio safety
+#pragma warning(disable : 4819) // disable boost is not unicode
+#pragma warning(disable : 4290) // disable VC++ cannot specify error type
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <chrono>
-#include <map>
-#include <string>
-#include <boost/algorithm/string.hpp>
-#include <boost/lexical_cast.hpp>
-#include <omp.h>
-#include <conio.h>
-
-using namespace std;
-using namespace boost;
 
 #include "Application.h"
 

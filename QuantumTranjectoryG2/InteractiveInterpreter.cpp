@@ -5,14 +5,14 @@
 
 class Command;
 
-void InteractiveInterpreter::load(string command){
+void InteractiveInterpreter::load(queue<Command*> coms,string command){
 	Command* com = CommandFactory::createCommand(command);
 	if(com!=NULL){
-		commandArray.push(com);
+		coms.push(com);
 	}
 }
 
-void InteractiveInterpreter::loadFile(string file){
+void InteractiveInterpreter::loadFile(queue<Command*> coms,string file){
 	ifstream ifs(file,ios::in);
 	if(!ifs || ifs.eof()){
 		//error
@@ -20,12 +20,6 @@ void InteractiveInterpreter::loadFile(string file){
 	while(ifs && !ifs.eof()){
 		string line;
 		getline(ifs,line);
-		this->load(line);
+		this->load(coms,line);
 	}
-}
-
-Command* InteractiveInterpreter::pop(){
-	Command* rtn = commandArray.front();
-	commandArray.pop();
-	return rtn;
 }
