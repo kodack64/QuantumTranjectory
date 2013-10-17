@@ -6,23 +6,39 @@
 using namespace std;
 
 class Simulator;
+class ParameterSet;
 
 class Command{
 private:
 public:
-	virtual void execute(Simulator*)=0;
+	virtual void execute(Simulator*,ParameterSet*)=0;
 };
 
-class ParameterFileSet : public Command{
+class CommandSetParameterFile : public Command{
 private:
-	string parameterFile;
+	string _fileName;
 public:
-	virtual void execute(Simulator*);
+	CommandSetParameterFile(string fileName)
+		:_fileName(fileName)
+	{}
+	virtual void execute(Simulator*,ParameterSet*);
 };
 
-class ParameterSet : public Command{
+class CommandSetParameter : public Command{
 private:
-	string targetName;
+	string _paramName;
+	string _value;
 public:
-	virtual void execute(Simulator*);
+	CommandSetParameter(string paramName,string value)
+		:_paramName(paramName)
+		,_value(value)
+	{}
+	virtual void execute(Simulator*,ParameterSet*);
+};
+class CommandExecute : public Command{
+private:
+public:
+	CommandExecute()
+	{}
+	virtual void execute(Simulator*,ParameterSet*);
 };

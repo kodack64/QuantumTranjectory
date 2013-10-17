@@ -1,10 +1,15 @@
 
 #include "InteractiveInterpreter.h"
 #include "CommandFactory.h"
-#include "Command.h"
 #include <fstream>
 
+class Command;
+
 void InteractiveInterpreter::load(string command){
+	Command* com = CommandFactory::createCommand(command);
+	if(com!=NULL){
+		commandArray.push(com);
+	}
 }
 
 void InteractiveInterpreter::loadFile(string file){
@@ -17,4 +22,10 @@ void InteractiveInterpreter::loadFile(string file){
 		getline(ifs,line);
 		this->load(line);
 	}
+}
+
+Command* InteractiveInterpreter::pop(){
+	Command* rtn = commandArray.front();
+	commandArray.pop();
+	return rtn;
 }
