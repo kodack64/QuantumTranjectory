@@ -1,0 +1,47 @@
+
+
+*******************************************************************************
+Fri Jun 28 16:23:36 2013
+
+
+FIT:    data read from "hit.txt"
+        format = z
+	y range restricted to [1.00000 : *]
+        #datapoints = 6
+        residuals are weighted equally (unit weight)
+
+function used for fitting: poi(x)
+fitted parameters initialized with current variable values
+
+
+
+ Iteration 0
+ WSSR        : 6542.45           delta(WSSR)/WSSR   : 0
+ delta(WSSR) : 0                 limit for stopping : 1e-005
+ lambda	  : 0.226754
+
+initial set of free parameter values
+
+lambda          = 1
+scale           = 1
+
+After 30 iterations the fit converged.
+final sum of squares of residuals : 189.21
+rel. change during last iteration : -3.09504e-007
+
+degrees of freedom    (FIT_NDF)                        : 4
+rms of residuals      (FIT_STDFIT) = sqrt(WSSR/ndf)    : 6.87768
+variance of residuals (reduced chisquare) = WSSR/ndf   : 47.3025
+
+Final set of parameters            Asymptotic Standard Error
+=======================            ==========================
+
+lambda          = 0.674951         +/- 0.1031       (15.28%)
+scale           = 190.012          +/- 26.05        (13.71%)
+
+
+correlation matrix of the fit parameters:
+
+               lambda scale  
+lambda          1.000 
+scale          -0.781  1.000 
