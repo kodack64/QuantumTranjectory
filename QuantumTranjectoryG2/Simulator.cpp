@@ -1,4 +1,6 @@
+
 #include "Simulator.h"
+#include "ParameterSet.h"
 
 #include <iostream>
 #include <boost/lexical_cast.hpp>
@@ -7,10 +9,10 @@ using namespace boost;
 
 #include "Random.h"
 
-#define TOSTRING(s) #s
+#define _NAME(s) #s
 
 void Simulator::execute(ParameterSet* par){
-	this->init();
+	this->init(par);
 	this->run();
 	this->close();
 }
@@ -18,13 +20,18 @@ void Simulator::execute(ParameterSet* par){
 void Simulator::executeNewThread(ParameterSet* par){
 }
 
-void Simulator::init(){
+void Simulator::init(ParameterSet* par){
 	// state limit
 	maxPG=4;
 	maxAE=4;
 	maxPF=0;
 	maxAF=0;
 	totAtom=10;
+	maxPG = par->getParamInt(_NAME(maxPG));
+	maxAE = par->getParamInt(_NAME(maxAE));
+	maxPF = par->getParamInt(_NAME(maxPF));
+	maxAF = par->getParamInt(_NAME(maxAF));
+	totAtom = par->getParamInt(_NAME(totAtom));
 
 	// use flag
 	useLossPG=true;
@@ -60,10 +67,6 @@ void Simulator::init(){
 	noDetect=0;
 	baseout=0;
 
-	string str = TOSTRING(life);
-
-
-
 
 	// no change
 	indPG=1;
@@ -86,4 +89,8 @@ void Simulator::init(){
 void Simulator::run(){
 }
 void Simulator::close(){
+	delete r;
+	delete[] state;
+	delete[] dif;
+	delete[] ene;
 }

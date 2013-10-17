@@ -9,7 +9,7 @@ class Random;
 
 class Simulator{
 private:
-	virtual void init();
+	virtual void init(ParameterSet*);
 	virtual void run();
 	virtual void close();
 
