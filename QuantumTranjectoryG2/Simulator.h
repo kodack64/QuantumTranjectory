@@ -13,15 +13,39 @@ private:
 	virtual void loadParameter(ParameterSet*);
 	virtual void initParameter();
 	virtual void run();
+	virtual void calcPulseSize();
 	virtual void calcLiuville();
 	virtual void calcLindblad();
 	virtual void close();
 
+	// macros
 	inline int getIdToPG(int i){return (i%indAE)/indPG;}
 	inline int getIdToAE(int i){return (i%indPF)/indAE;}
 	inline int getIdToPF(int i){return (i%indAF)/indPF;}
 	inline int getIdToAF(int i){return (i%vecSize)/indAF;}
 
+	// loop variable
+	double pulse;
+	int pg;
+	int ae;
+	int pf;
+	int af;
+	int i;
+	complex<double> rot;
+	double sum;
+	double poslosg;
+
+	long hitstep;
+
+	bool flagLoseAtom;
+	bool flagLossControl;
+	bool flagLossProbe;
+
+	vector<double> lossTimeAtom;
+	vector<double> lossTimeControl;
+	vector<double> lossTimeProbe;
+
+	// constant variable
 	int maxPG;
 	int maxAE;
 	int maxPF;

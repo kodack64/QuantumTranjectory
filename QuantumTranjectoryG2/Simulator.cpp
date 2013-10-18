@@ -118,14 +118,12 @@ void Simulator::initParameter(){
 }
 
 void Simulator::run(){
+	calcPulseSize();
 	calcLiuville();
 	calcLindblad();
 }
 
-void Simulator::calcLiuville(){
-	complex<double> rot;
-	double pulse;
-	int pg,ae,pf,af,i;
+void Simulator::calcPulseSize(){
 	rot = complex<double>(cos(step*dt*detune),sin(step*dt*detune));
 	if(usePulse){
 		if(dt*step<width){
@@ -136,6 +134,9 @@ void Simulator::calcLiuville(){
 	}else{
 		pulse=1;
 	}
+}
+
+void Simulator::calcLiuville(){
 	for(i=0;i<vecSize;i++)dif[i]=0;
 	for(i=0;i<vecSize;i++){
 		pg = getIdToPG(i);
@@ -171,14 +172,6 @@ void Simulator::calcLiuville(){
 }
 
 void Simulator::calcLindblad(){
-
-	double sum,poslosg;
-	int ae,af,pg,pf,i;
-	long hitstep=0;
-	bool flaghit;
-	int totalLossAE=0;
-	fstream nodOut;
-	vector<double> lossTime;
 
 	// loss g photon
 	if(noDetect>0){
