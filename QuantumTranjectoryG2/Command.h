@@ -6,13 +6,12 @@
 #include <queue>
 using namespace std;
 
-class Simulator;
 class ParameterSet;
 
 class Command{
 private:
 public:
-	virtual void execute(Simulator*,ParameterSet*,queue<Command*>)=0;
+	virtual void execute(ParameterSet*,queue<Command*>)=0;
 };
 
 class CommandSetParameterFile : public Command{
@@ -22,7 +21,7 @@ public:
 	CommandSetParameterFile(string fileName)
 		:_fileName(fileName)
 	{}
-	virtual void execute(Simulator*,ParameterSet*,queue<Command*>) override;
+	virtual void execute(ParameterSet*,queue<Command*>) override;
 };
 
 class CommandSetParameter : public Command{
@@ -34,14 +33,16 @@ public:
 		:_paramName(paramName)
 		,_value(value)
 	{}
-	virtual void execute(Simulator*,ParameterSet*,queue<Command*>) override;
+	virtual void execute(ParameterSet*,queue<Command*>) override;
 };
 class CommandExecute : public Command{
 private:
+	string _executeNum;
 public:
-	CommandExecute()
+	CommandExecute(string executeNum)
+	:_executeNum(executeNum)
 	{}
-	virtual void execute(Simulator*,ParameterSet*,queue<Command*>) override;
+	virtual void execute(ParameterSet*,queue<Command*>) override;
 };
 
 class CommandRepeat : public Command{
@@ -53,5 +54,5 @@ public:
 	:_repeatNum(repeatNum)
 	,_scriptFile(scriptFile){}
 
-	virtual void execute(Simulator*,ParameterSet*,queue<Command*>) override;
+	virtual void execute(ParameterSet*,queue<Command*>) override;
 };

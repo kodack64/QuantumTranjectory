@@ -84,6 +84,9 @@
     <ClCompile Include="InteractiveInterpreter.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Simulator.cpp" />
+    <ClCompile Include="SimulatorCore.cpp" />
+    <ClCompile Include="SimulatorFinalize.cpp" />
+    <ClCompile Include="SimulatorInitialize.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />

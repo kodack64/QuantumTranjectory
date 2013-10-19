@@ -31,7 +31,7 @@ Command* CommandFactory::createCommand(string line) throw (BadCommand){
 		return new CommandSetParameterFile(words.at(1));
 	}));
 	funcmap.insert(make_pair("execute",[](vector<string> words){
-		return new CommandExecute();
+		return new CommandExecute(words.at(1));
 	}));
 	funcmap.insert(make_pair("repeat",[](vector<string> words){
 		return new CommandRepeat(words.at(1),words.at(2));

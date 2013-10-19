@@ -11,11 +11,11 @@
 #include <boost/lexical_cast.hpp>
 using namespace std;
 
-void CommandSetParameter::execute(Simulator* sim,ParameterSet* par,queue<Command*> coms){
+void CommandSetParameter::execute(ParameterSet* par,queue<Command*> coms){
 	par->setParam(_paramName,_value);
 }
 
-void CommandSetParameterFile::execute(Simulator* sim,ParameterSet* par,queue<Command*> coms){
+void CommandSetParameterFile::execute(ParameterSet* par,queue<Command*> coms){
 	ifstream ifs(_fileName,ios::in);
 	if(!ifs || ifs.eof()){
 		return;
@@ -30,11 +30,38 @@ void CommandSetParameterFile::execute(Simulator* sim,ParameterSet* par,queue<Com
 	}
 }
 
-void CommandExecute::execute(Simulator* sim,ParameterSet* par,queue<Command*> coms){
-	sim->execute(par);
+void CommandExecute::execute(ParameterSet* par,queue<Command*> coms){
+
+	int i_repeatNum = boost::lexical_cast<int>(_executeNum);
+
+#ifdef _OPENMP
+	int count=0;
+#pragma omp parallel
+	{
+		Simulator* sim = new Simulator();
+		while(true){
+#pragma omp atomic
+			{
+				if(count>=i_repeatNum)break;
+				else count++;
+			}
+			sim->execute(par);
+		}
+		delete sim;
+	}
+
+#else
+
+	Simulator* sim = new Simulator();
+	for(int i=0;i<i_repeatNum;i++){
+		sim->execute(par);
+	}
+	delete sim;
+
+#endif
 }
 
-void CommandRepeat::execute(Simulator* sim,ParameterSet* par,queue<Command*> coms){
+void CommandRepeat::execute(ParameterSet* par,queue<Command*> coms){
 	int i_repeatNum = boost::lexical_cast<int>(_repeatNum);
 	for(int i=0;i<i_repeatNum;i++){
 		string command = "load " + _scriptFile ;

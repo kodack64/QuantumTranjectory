@@ -2,6 +2,7 @@
 #pragma once
 
 #include <complex>
+#include <vector>
 using namespace std;
 
 class ParameterSet;
@@ -12,34 +13,50 @@ private:
 	virtual void init(ParameterSet*);
 	virtual void loadParameter(ParameterSet*);
 	virtual void initParameter();
+	virtual void initLogging();
+
 	virtual void run();
 	virtual void calcPulseSize();
 	virtual void calcLiuville();
 	virtual void calcLindblad();
+	virtual void calcProbabiliyOfLoss();
+	virtual void calcProjection();
+	virtual void logging();
+	virtual void checkCondition();
+
 	virtual void close();
 
-	// macros
+	// macro
 	inline int getIdToPG(int i){return (i%indAE)/indPG;}
 	inline int getIdToAE(int i){return (i%indPF)/indAE;}
 	inline int getIdToPF(int i){return (i%indAF)/indPF;}
 	inline int getIdToAF(int i){return (i%vecSize)/indAF;}
 
 	// loop variable
-	double pulse;
 	int pg;
 	int ae;
 	int pf;
 	int af;
+	double trace;
+	double energy;
+	int step;
+
+	// temp variable
 	int i;
-	complex<double> rot;
 	double sum;
-	double poslosg;
 
-	long hitstep;
+	// pulse variable
+	complex<double> pulse;
+	complex<double> pulseRot;
 
-	bool flagLoseAtom;
+	// loss variable
+	bool flagLossAtom;
 	bool flagLossControl;
 	bool flagLossProbe;
+
+	double probLossProbe;
+	double probLossControl;
+	double probLossAtom;
 
 	vector<double> lossTimeAtom;
 	vector<double> lossTimeControl;
@@ -52,48 +69,48 @@ private:
 	int maxAF;
 	int totAtom;
 
+	//  given parameters
 	// use flag
-	bool useLossPG;
-	bool useLossAE;
-	bool useLossPF;
-	bool useLossAF;
+	bool useLossProbe;
+	bool useLossAtom;
+	bool useLossControl;
 	bool usePulse;
 
 	//	time
 	double dt;
-	int div;
 	long maxstep;
-	int step;
 
 	//	input
-	double pump;
-	double detune;
-	double width;
+	double pulsePump;
+	double pulseDetune;
+	double pulseWidth;
 
 	//	coherence
-	double cohg;
-	double cohf;
+	double coherenceProbe;
+	double coherenceControl;
 
 	//	lifetime
-	double lossPG;
-	double lossPF;
+	double lossProbe;
+	double lossControl;
 	double life;
 
 	// end condition
+	bool endFlag;
 	double eps;
 	int seed;
 
-	// predetection
-	int noDetect;
-	int baseout;
+	// logging
+	int loggingUnit;
 
-
+	// indirectry given parameters
 	int indPG;
 	int indAE;
 	int indPF;
 	int indAF;
 	int vecSize;
 	int maxEne;
+
+	// const value
 	complex<double> img;
 
 	// memory allocate
@@ -104,5 +121,4 @@ private:
 
 public:
 	virtual void execute(ParameterSet* param);
-	virtual void executeNewThread(ParameterSet* param);
 };

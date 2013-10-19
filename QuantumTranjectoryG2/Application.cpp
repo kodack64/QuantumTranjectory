@@ -1,23 +1,22 @@
 
+#pragma warning(disable:4819)
+
 #include "Application.h"
 
 #include <iostream>
+using namespace std;
+
 #include "InteractiveInterpreter.h"
-#include "Simulator.h"
 #include "ParameterSet.h"
 #include "Command.h"
 
-using namespace std;
-
 Application::~Application(){
 	delete inter;
-	delete simulator;
 	delete parameter;
 }
 
 void Application::start(){
 	inter = new InteractiveInterpreter();
-	simulator = new Simulator();
 	parameter = new ParameterSet();
 
 	loadCommand();
@@ -39,7 +38,7 @@ void Application::consumeCommand(){
 	while(commandArray.empty()){
 		com = commandArray.front();
 		if(com!=NULL){
-			com->execute(simulator,parameter,commandArray);
+			com->execute(parameter,commandArray);
 			delete com;
 		}else{
 			break;

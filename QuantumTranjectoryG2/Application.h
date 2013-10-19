@@ -7,7 +7,6 @@
 using namespace std;
 
 class InteractiveInterpreter;
-class Simulator;
 class ParameterSet;
 class Command;
 
@@ -15,7 +14,6 @@ class Application{
 private:
 	int _argv;
 	char** _argc;
-	Simulator* simulator;
 	ParameterSet* parameter;
 	InteractiveInterpreter* inter;
 	queue<Command*> commandArray;
