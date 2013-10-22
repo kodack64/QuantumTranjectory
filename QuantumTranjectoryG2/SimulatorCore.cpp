@@ -72,10 +72,6 @@ void Simulator::calcProbabiliyOfLoss(){
 	flagLossAtom = (useLossAtom)&(r->next()<probLossAtom);
 	flagLossProbe = (useLossProbe)&(r->next()<probLossProbe);
 	flagLossControl = (useLossControl)&(r->next()<probLossControl);
-
-	if(flagLossAtom)lossTimeAtom.push_back(dt*step);
-	if(flagLossProbe)lossTimeProbe.push_back(dt*step);
-	if(flagLossControl)lossTimeControl.push_back(dt*step);
 }
 
 // ロスなどの混合状態になるケースを計算

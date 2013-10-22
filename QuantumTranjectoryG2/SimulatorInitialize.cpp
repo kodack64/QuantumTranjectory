@@ -101,4 +101,6 @@ void Simulator::initParameter(){
 
 void Simulator::initLogging(){
 	cout.precision(3);
+	lossTimeLog.open("Log_LossTime.txt",ios::out);
+	lossProbabilityLog.open("Log_LossProbability.txt",ios::out);
 }

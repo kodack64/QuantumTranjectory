@@ -3,6 +3,7 @@
 
 #include <complex>
 #include <vector>
+#include <string>
 using namespace std;
 
 class ParameterSet;
@@ -58,9 +59,6 @@ private:
 	double probLossControl;
 	double probLossAtom;
 
-	vector<double> lossTimeAtom;
-	vector<double> lossTimeControl;
-	vector<double> lossTimeProbe;
 
 	// constant variable
 	int maxPG;
@@ -101,6 +99,16 @@ private:
 
 	// logging
 	int loggingUnit;
+	bool loggingLossTimeFlag;
+	bool loggingLossProbabilityFlag;
+	string loggingLossTimeName;
+	string loggingLossProbabilityName;
+	vector<double> lossTimeLogAtom;
+	vector<double> lossTimeLogControl;
+	vector<double> lossTimeLogProbe;
+	vector<double> lossProbabilityLogAtom;
+	vector<double> lossProbabilityLogControl;
+	vector<double> lossProbabilityLogProbe;
 
 	// indirectry given parameters
 	int indPG;
