@@ -20,11 +20,12 @@ void Application::start(){
 	parameter = new ParameterSet();
 
 	loadCommand();
-	while(true){
+
+	endFlag=false;
+	while(!endFlag){
 		consumeCommand();
 		waitCommand();
 	}
-	delete inter;
 }
 
 void Application::loadCommand(){
@@ -35,7 +36,7 @@ void Application::loadCommand(){
 
 void Application::consumeCommand(){
 	Command* com;
-	while(commandArray.empty()){
+	while(!commandArray.empty()){
 		com = commandArray.front();
 		if(com!=NULL){
 			com->execute(parameter,commandArray);
@@ -49,6 +50,8 @@ void Application::consumeCommand(){
 
 void Application::waitCommand(){
 	string command;
+	cout << ">";
 	getline(cin,command);
-	inter->load(commandArray,command);
+	if(command=="exit")endFlag=true;
+	else inter->load(commandArray,command);
 }

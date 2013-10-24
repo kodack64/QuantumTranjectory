@@ -14,6 +14,7 @@ class Application{
 private:
 	int _argv;
 	char** _argc;
+	bool endFlag;
 	ParameterSet* parameter;
 	InteractiveInterpreter* inter;
 	queue<Command*> commandArray;

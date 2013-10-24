@@ -1,9 +1,10 @@
 
 #include "Simulator.h"
-#include "Random.h"
 
 // Às‘S‘Ì
-void Simulator::execute(ParameterSet* par){
+void Simulator::execute(int unit,int id,ParameterSet* par){
+	_unit=unit;
+	_id=id;
 	this->init(par);
 	this->run();
 	this->close();
@@ -33,8 +34,6 @@ void Simulator::run(){
 
 // ƒƒ‚ƒŠ‚Ì‰ğ•ú
 void Simulator::close(){
-	delete r;
-	delete[] state;
-	delete[] dif;
-	delete[] ene;
+	loggingSave();
+	releaseParameter();
 }

@@ -11,6 +11,10 @@ class Random;
 
 class Simulator{
 private:
+
+	int _unit;
+	int _id;
+
 	virtual void init(ParameterSet*);
 	virtual void loadParameter(ParameterSet*);
 	virtual void initParameter();
@@ -26,6 +30,8 @@ private:
 	virtual void checkCondition();
 
 	virtual void close();
+	virtual void releaseParameter();
+	virtual void loggingSave();
 
 	// macro
 	inline int getIdToPG(int i){return (i%indAE)/indPG;}
@@ -128,5 +134,5 @@ private:
 	double* ene;
 
 public:
-	virtual void execute(ParameterSet* param);
+	virtual void execute(int unit,int id,ParameterSet* param);
 };

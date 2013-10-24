@@ -9,6 +9,7 @@
 #include <map>
 #include <algorithm>
 #include <functional>
+#include <iostream>
 
 using namespace std;
 
@@ -25,16 +26,47 @@ Command* CommandFactory::createCommand(string line) throw (BadCommand){
 	map<string,function<Command*(vector<string>)> > funcmap;
 
 	funcmap.insert(make_pair("set",[](vector<string> words){
-		return new CommandSetParameter(words.at(1),words.at(2));
+		if(words.size()>=3){
+			return (Command*)(new CommandSetParameter(words.at(1),words.at(2)));
+		}else{
+			cout << ">> format : set <parameter name> <parameter value>" << endl;
+			return (Command*)NULL;
+		}
+	}));
+	funcmap.insert(make_pair("difset",[](vector<string> words){
+		if(words.size()>=4){
+			return (Command*)(new CommandDifSetParameter(words.at(1),words.at(2),words.at(3)));
+		}else{
+			cout << ">> format : difset <parameter name> <parameter dif value> <parameter type>" << endl;
+			return (Command*)NULL;
+		}
+	}));
+	funcmap.insert(make_pair("desc",[](vector<string> words){
+		return (Command*)(new CommandDescParameter());
 	}));
 	funcmap.insert(make_pair("load",[](vector<string> words){
-		return new CommandSetParameterFile(words.at(1));
+		if(words.size()>=2){
+			return (Command*)(new CommandSetParameterFile(words.at(1)));
+		}else{
+			cout << ">> format : load <parameter file>" << endl;
+			return (Command*)NULL;
+		}
 	}));
 	funcmap.insert(make_pair("execute",[](vector<string> words){
-		return new CommandExecute(words.at(1));
+		if(words.size()>=2){
+			return (Command*)(new CommandExecute(words.at(1)));
+		}else{
+			cout << ">> format : execute <repeat number>" << endl;
+			return (Command*)NULL;
+		}
 	}));
-	funcmap.insert(make_pair("repeat",[](vector<string> words){
-		return new CommandRepeat(words.at(1),words.at(2));
+	funcmap.insert(make_pair("script",[](vector<string> words){
+		if(words.size()>=3){
+			return (Command*)(new CommandScript(words.at(1),words.at(2)));
+		}else{
+			cout << ">> format : script <script file> <repeat number>" << endl;
+			return (Command*)NULL;
+		}
 	}));
 
 	boost::algorithm::split(words,line,boost::is_space());
@@ -44,11 +76,19 @@ Command* CommandFactory::createCommand(string line) throw (BadCommand){
 		if(funcmap.find(words[0])!= funcmap.end()){
 			try{
 				return funcmap[words[0]](words);
-			}catch(BadCommand& bd){
-				throw bd;
+			}catch(BadCommand bd){
+				return NULL;
 			}
 		}else{
-			throw new BadCommand("message is empty");
+			cout << ">> invalid command" << endl;
+			cout << ">> commands list:" << endl;
+			auto ite = funcmap.begin();
+			while(ite!=funcmap.end()){
+				cout << ">>> " << ite->first << endl;
+				ite++;
+			}
+				cout << ">>> exit" << endl;
+			return NULL;
 		}
 	}
 }

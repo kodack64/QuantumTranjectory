@@ -1,0 +1,6 @@
+maxPG 3
+maxPF 3
+maxAG 3
+maxAF 3
+
+dt 1e-3

@@ -10,6 +10,6 @@ class Command;
 class InteractiveInterpreter{
 private:
 public:
-	virtual void loadFile(queue<Command*> com,string fileName);
-	virtual void load(queue<Command*> com,string command);
+	virtual void loadFile(queue<Command*>& com,string fileName);
+	virtual void load(queue<Command*>& com,string command);
 };
