@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include <fstream>
 using namespace std;
 using namespace boost;
 
@@ -56,13 +57,13 @@ public:
 	virtual void setParam(string str,string val){
 		param[str]=val;
 	}
-	virtual void outputAllParameter(){
-		cout << ">>> **********" << endl;
+	virtual void outputAllParameter(ostream &out){
+		out << ">>> **********" << endl;
 		auto ite = param.begin();
 		while(ite!=param.end()){
-			cout << ">>> " << ite->first << " = " << ite->second << endl;
+			out << ">>> " << ite->first << " = " << ite->second << endl;
 			ite++;
 		}
-		cout << ">>> **********" << endl;
+		out << ">>> **********" << endl;
 	}
 };

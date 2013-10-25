@@ -80,5 +80,32 @@ public:
 	virtual void execute(ParameterSet*,queue<Command*>&) override;
 };
 
+class CommandCalcHistgram : public Command{
+private:
+	string unit;
+public:
+	CommandCalcHistgram(string _unit)
+	:unit(_unit)
+	{}
+	virtual void execute(ParameterSet*,queue<Command*>&) override;
+};
+
+class CommandCalcPower : public Command{
+private:
+	string unit;
+public:
+	CommandCalcPower(string _unit)
+	:unit(_unit)
+	{}
+	virtual void execute(ParameterSet*,queue<Command*>&) override;
+};
+
+class CommandCalcG2 : public Command{
+private:
+public:
+	CommandCalcG2()
+	{}
+	virtual void execute(ParameterSet*,queue<Command*>&) override;
+};
 
 

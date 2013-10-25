@@ -42,7 +42,7 @@ void CommandDifSetParameter::execute(ParameterSet* par,queue<Command*>& coms){
 }
 
 void CommandDescParameter::execute(ParameterSet* par,queue<Command*>& coms){
-	par->outputAllParameter();
+	par->outputAllParameter(cout);
 }
 
 
@@ -76,9 +76,17 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 		i_unit = boost::lexical_cast<int>(par->getParamInt("unit",0));
 		par->setParam("unit",boost::lexical_cast<string>(i_unit+1));
 	}catch(boost::bad_lexical_cast e){
-		i_repeatNum=1;
+		i_unit=1;
 	}
 
+	ofstream ofs;
+	stringstream ss;
+	ss << "log_" << i_unit << "_parameter.txt" << endl;
+	ofs.open(ss.str(),ios::out);
+	if(!ofs.bad()){
+		par->outputAllParameter(ofs);
+		ofs.close();
+	}
 
 #ifdef _OPENMP
 	int count=0;
@@ -114,6 +122,31 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 #endif
 }
 
+void CommandCalcG2::execute(ParameterSet* par,queue<Command*>& coms){
+	int i_unit;
+	try{
+		i_unit = boost::lexical_cast<int>(par->getParamInt("unit",0));
+		par->setParam("unit",boost::lexical_cast<string>(i_unit+1));
+	}catch(boost::bad_lexical_cast e){
+		i_unit=1;
+	}
+
+	ofstream ofs;
+	stringstream ss;
+	ss << "log_" << i_unit << "_parameter.txt" << endl;
+	ofs.open(ss.str(),ios::out);
+	if(!ofs.bad()){
+		par->outputAllParameter(ofs);
+		ofs.close();
+	}
+	cout << ">> start simulator " << endl;
+	Simulator* sim = new Simulator();
+	cout << ">> base try" << endl;
+	sim->execute(i_unit,0,par);
+	delete sim;
+	cout << ">>finish" << endl;
+}
+
 void CommandScript::execute(ParameterSet* par,queue<Command*>& coms){
 	int i_repeatNum;
 	try{
@@ -142,4 +175,10 @@ void CommandScript::execute(ParameterSet* par,queue<Command*>& coms){
 		}
 		ifs.close();
 	}
+}
+
+void CommandCalcHistgram::execute(ParameterSet* par,queue<Command*>& coms){
+}
+
+void CommandCalcPower::execute(ParameterSet* par,queue<Command*>& coms){
 }

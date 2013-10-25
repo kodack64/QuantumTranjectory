@@ -26,7 +26,7 @@ Command* CommandFactory::createCommand(string line) throw (BadCommand){
 	map<string,function<Command*(vector<string>)> > funcmap;
 
 	funcmap.insert(make_pair("set",[](vector<string> words){
-		if(words.size()>=3){
+		if(words.size()==3){
 			return (Command*)(new CommandSetParameter(words.at(1),words.at(2)));
 		}else{
 			cout << ">> format : set <parameter name> <parameter value>" << endl;
@@ -34,7 +34,7 @@ Command* CommandFactory::createCommand(string line) throw (BadCommand){
 		}
 	}));
 	funcmap.insert(make_pair("difset",[](vector<string> words){
-		if(words.size()>=4){
+		if(words.size()==4){
 			return (Command*)(new CommandDifSetParameter(words.at(1),words.at(2),words.at(3)));
 		}else{
 			cout << ">> format : difset <parameter name> <parameter dif value> <parameter type>" << endl;
@@ -45,7 +45,7 @@ Command* CommandFactory::createCommand(string line) throw (BadCommand){
 		return (Command*)(new CommandDescParameter());
 	}));
 	funcmap.insert(make_pair("load",[](vector<string> words){
-		if(words.size()>=2){
+		if(words.size()==2){
 			return (Command*)(new CommandSetParameterFile(words.at(1)));
 		}else{
 			cout << ">> format : load <parameter file>" << endl;
@@ -53,7 +53,7 @@ Command* CommandFactory::createCommand(string line) throw (BadCommand){
 		}
 	}));
 	funcmap.insert(make_pair("execute",[](vector<string> words){
-		if(words.size()>=2){
+		if(words.size()==2){
 			return (Command*)(new CommandExecute(words.at(1)));
 		}else{
 			cout << ">> format : execute <repeat number>" << endl;
@@ -61,10 +61,34 @@ Command* CommandFactory::createCommand(string line) throw (BadCommand){
 		}
 	}));
 	funcmap.insert(make_pair("script",[](vector<string> words){
-		if(words.size()>=3){
+		if(words.size()==3){
 			return (Command*)(new CommandScript(words.at(1),words.at(2)));
 		}else{
 			cout << ">> format : script <script file> <repeat number>" << endl;
+			return (Command*)NULL;
+		}
+	}));
+	funcmap.insert(make_pair("histgram",[](vector<string> words){
+		if(words.size()==2){
+			return (Command*)(new CommandCalcHistgram(words.at(1)));
+		}else{
+			cout << ">> format : histgram <log unit number>" << endl;
+			return (Command*)NULL;
+		}
+	}));
+	funcmap.insert(make_pair("power",[](vector<string> words){
+		if(words.size()==2){
+			return (Command*)(new CommandCalcPower(words.at(1)));
+		}else{
+			cout << ">> format : power <log unit number>" << endl;
+			return (Command*)NULL;
+		}
+	}));
+	funcmap.insert(make_pair("g2",[](vector<string> words){
+		if(words.size()==1){
+			return (Command*)(new CommandCalcG2());
+		}else{
+			cout << ">> format : g2" << endl;
 			return (Command*)NULL;
 		}
 	}));
