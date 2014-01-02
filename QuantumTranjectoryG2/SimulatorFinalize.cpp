@@ -16,13 +16,18 @@ using namespace std;
 // 終了条件のチェック
 void Simulator::checkCondition(){
 	if(step>maxstep)endFlag=true;
-	if(energy<eps && dt*step>pulseWidth)endFlag=true;
+	if(usePulse && energy<eps && dt*step>pulseWidth)endFlag=true;
 #ifdef _MSC_VER
 	if(_kbhit()){
 		char c = _getch();
 		if(c==VK_RETURN){
 			cout << "execution aborted" << endl;
 			endFlag = true;
+		}
+		if(c==VK_SPACE){
+			cout << "energy : " << energy << endl;
+			cout << "step : " << step << " / " << maxstep << endl;
+			cout << "prob : " << probLossProbe << endl;
 		}
 	}
 #endif
@@ -41,7 +46,7 @@ void Simulator::logging(){
 			lossProbabilityLogProbe.push_back(probLossProbe);
 			lossProbabilityLogControl.push_back(probLossControl);
 		}
-		cout << norm(state[0]) << endl;
+//		cout << norm(state[0]) << endl;
 	}
 }
 

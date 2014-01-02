@@ -5,6 +5,7 @@
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <fstream>
+#include <iostream>
 using namespace std;
 using namespace boost;
 
@@ -14,10 +15,45 @@ class ParameterSet{
 private:
 	map <string,string> param;
 public:
+	ParameterSet(){
+		param.clear();
+
+		param["unit"] = "0";
+
+		param["maxPG"]="4";
+		param["maxAE"]="4";
+		param["maxPF"]="4";
+		param["maxAF"]="4";
+		param["totAtom"]="100";
+
+		param["useLossProbe"]="true";
+		param["useLossControl"]="true";
+		param["useLossAtom"]="true";
+		param["usePulse"]="false";
+
+		param["dt"]="1e-2";
+		param["maxstep"]="10000000";
+
+		param["loggingUnit"] = "1000";
+
+		param["pulsePump"] = "1.5e-1";
+		param["pulseDetune"] = "0e-1";
+		param["pulseWidth"] = "1e1";
+
+		param["coherenceProbe"] = "1e-1";
+		param["coherenceControl"]  ="1e-0";
+
+		param["lossProbe"] = "3e-2";
+		param["lossControl"] ="3e-2";
+		param["life"] = "3e-0";
+		param["eps"] = "1e-3";
+	}
+
 	virtual string getParam(string str,string def){
 		if(param.count(str)>0){
 			return param[str];
 		}else{
+			cout << " *** Undefined Parameter : " << str << endl;
 			return def;
 		}
 	}
@@ -30,6 +66,7 @@ public:
 				rtn = def;
 			}
 		}else{
+			cout << " *** Undefined Parameter : " << str << endl;
 			rtn=def;
 		}
 		return rtn;
@@ -43,6 +80,7 @@ public:
 				rtn = def;
 			}
 		}else{
+			cout << " *** Undefined Parameter : " << str << endl;
 			rtn=def;
 		}
 		return rtn;
@@ -51,10 +89,16 @@ public:
 		if(param.count(str)>0){
 			return (param[str]=="1" || param[str]=="true");
 		}else{
+			cout << " *** Undefined Parameter : " << str << endl;
 			return def;
 		}
 	}
 	virtual void setParam(string str,string val){
+		if(param.count(str)==0){
+			cout << " *** New Parameter : " << str << " <- " << val << endl;
+		}else{
+			cout << " *** Update Parameter : " << str << " : " << param[str] << " -> " << val << endl;
+		}
 		param[str]=val;
 	}
 	virtual void outputAllParameter(ostream &out){

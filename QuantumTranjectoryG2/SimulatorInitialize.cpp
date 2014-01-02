@@ -14,11 +14,6 @@ using namespace std;
 // ParameterSet‚©‚çƒpƒ‰ƒ[ƒ^‚Ì“Ç‚Ýž‚Ý
 void Simulator::loadParameter(ParameterSet* par){
 	// state limit
-	maxPG=4;
-	maxAE=4;
-	maxPF=0;
-	maxAF=0;
-	totAtom=10;
 	maxPG = par->getParamInt(_NAME(maxPG),maxPG);
 	maxAE = par->getParamInt(_NAME(maxAE),maxAE);
 	maxPF = par->getParamInt(_NAME(maxPF),maxPF);
@@ -26,51 +21,34 @@ void Simulator::loadParameter(ParameterSet* par){
 	totAtom = par->getParamInt(_NAME(totAtom),totAtom);
 
 	// use flag
-	useLossProbe=true;
-	useLossAtom=true;
-	useLossControl=true;
-	usePulse=true;
 	useLossProbe = par->getParamBoolean(_NAME(useLossProbe),useLossProbe);
 	useLossAtom = par->getParamBoolean(_NAME(useLossAtom),useLossAtom);
 	useLossControl = par->getParamBoolean(_NAME(useLossControl),useLossControl);
 	usePulse = par->getParamBoolean(_NAME(usePulse),usePulse);
 
 	//	time
-//	dt=1e-4;
-	dt=1e-2;
-	maxstep=100000000;
 	dt = par->getParamDouble(_NAME(dt),dt);
 	maxstep = par->getParamInt(_NAME(maxstep),maxstep);
 
 	// logging
-	loggingUnit=1000;
 	loggingUnit = par->getParamInt(_NAME(loggingUnit),loggingUnit);
 
 
 	//	input
-	pulsePump=1.5e-1;
-	pulseDetune=0e-1;
-	pulseWidth=1e1;
 	pulsePump = par->getParamDouble(_NAME(pulsePump),pulsePump);
 	pulseDetune = par->getParamDouble(_NAME(pulseDetune),pulseDetune);
 	pulseWidth = par->getParamDouble(_NAME(pulseWidth),pulseWidth);
 
 	//	coherence
-	coherenceProbe=1e-1;
-	coherenceControl=0e-0;
 	coherenceProbe = par->getParamDouble(_NAME(coherenceProbe),coherenceProbe);
 	coherenceControl = par->getParamDouble(_NAME(coherenceControl),coherenceControl);
 
 	//	lifetime
-	lossProbe=3e-1;
-	lossControl=3e-1;
-	life=6e-3;
 	lossProbe = par->getParamDouble(_NAME(lossProbe),lossProbe);
 	lossControl = par->getParamDouble(_NAME(lossControl),lossControl);
 	life = par->getParamDouble(_NAME(life),life);
 
 	// end condition
-	eps=1e-3;
 	eps = par->getParamDouble(_NAME(eps),eps);
 }
 

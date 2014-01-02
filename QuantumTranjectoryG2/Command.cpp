@@ -74,9 +74,9 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 	int i_unit;
 	try{
 		i_unit = boost::lexical_cast<int>(par->getParamInt("unit",0));
-		par->setParam("unit",boost::lexical_cast<string>(i_unit+1));
+//		par->setParam("unit",boost::lexical_cast<string>(i_unit+1));
 	}catch(boost::bad_lexical_cast e){
-		i_unit=1;
+		i_unit=0;
 	}
 
 	ofstream ofs;

@@ -26,11 +26,11 @@ void Simulator::calcLiuville(){
 		af = getIdToAF(i);
 
 		// pump
-		if(ae<maxAE){
-			dif[i]+=img*pulse*sqrt(ae+1)*sqrt(totAtom-ae-af)*state[i+indAE];
+		if(pg<maxPG){
+			dif[i]+=img*pulse*sqrt(pg+1)*state[i+indPG];
 		}
-		if(ae>0){
-			dif[i]+=img*conj(pulse)*sqrt(ae)*sqrt(totAtom-ae-af+1)*state[i-indAE];
+		if(pg>0){
+			dif[i]+=img*conj(pulse)*sqrt(pg)*state[i-indPG];
 		}
 
 		// coh e-g
@@ -52,6 +52,14 @@ void Simulator::calcLiuville(){
 	for(i=0;i<vecSize;i++)state[i]+=dif[i]*dt;
 }
 
+// ロスなどの混合状態になるケースを計算
+void Simulator::calcLindblad(){
+
+	calcProbabiliyOfLoss();
+
+	calcProjection();
+}
+
 // ロスが起きる確率を計算して判定
 void Simulator::calcProbabiliyOfLoss(){
 	probLossControl=0;
@@ -61,9 +69,9 @@ void Simulator::calcProbabiliyOfLoss(){
 		pg = getIdToPG(i);
 		pf = getIdToPF(i);
 		af = getIdToAF(i);
-		probLossAtom += norm(state[i])*sqrt(ae);
-		probLossProbe += norm(state[i])*sqrt(pg);
-		probLossControl += norm(state[i])*sqrt(pf);
+		probLossAtom += norm(state[i])*ae;
+		probLossProbe += norm(state[i])*pg;
+		probLossControl += norm(state[i])*pf;
 	}
 	probLossAtom*=dt*life;
 	probLossProbe*=dt*lossProbe;
@@ -74,19 +82,12 @@ void Simulator::calcProbabiliyOfLoss(){
 	flagLossControl = (useLossControl)&(r->next()<probLossControl);
 }
 
-// ロスなどの混合状態になるケースを計算
-void Simulator::calcLindblad(){
-
-	calcProbabiliyOfLoss();
-
-	calcProjection();
-}
-
 // 測定の結果に応じて射影
 void Simulator::calcProjection(){
 
 	for(i=0;i<vecSize;i++)dif[i]=0;
 
+	// todo eからaとfにランダムに落ちるようにする
 	if(flagLossAtom){
 		for(i=0;i<vecSize;i++){
 			ae = getIdToAE(i);
@@ -118,6 +119,7 @@ void Simulator::calcProjection(){
 		}
 	}
 
+	//ロスがなかった時の期待値の補正
 	trace=0;
 	energy=0;
 	for(i=0;i<vecSize;i++){
@@ -136,6 +138,8 @@ void Simulator::calcProjection(){
 		trace+=norm(state[i]);
 		energy+=norm(state[i])*(ae+pg+pf);
 	}
+
+	//正規化
 	trace=sqrt(trace);
 	for(i=0;i<vecSize;i++)state[i]/=trace;
 }
