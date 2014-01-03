@@ -2,11 +2,11 @@
 #include "Simulator.h"
 #include "Random.h"
 
-// パルス形状を計算
+// その時刻でのパルスの複素振幅を計算
 void Simulator::calcPulseSize(){
-
 	pulse=pulsePump*(complex<double>(cos(step*dt*pulseDetune),sin(step*dt*pulseDetune)));
 
+	// usePulse=trueならパルスの形状が三角関数になるように変形
 	if(usePulse){
 		if(dt*step<pulseWidth){
 			pulse*=(-cos(dt*step/pulseWidth*acos(0)*4)+1)/2;
@@ -16,7 +16,8 @@ void Simulator::calcPulseSize(){
 	}
 }
 
-// ユニタリな部分の計算
+
+// ユニタリな時間発展の計算
 void Simulator::calcLiuville(){
 	for(i=0;i<vecSize;i++)dif[i]=0;
 	for(i=0;i<vecSize;i++){
@@ -25,7 +26,7 @@ void Simulator::calcLiuville(){
 		pf = getIdToPF(i);
 		af = getIdToAF(i);
 
-		// pump
+		// 励起
 		if(pg<maxPG){
 			dif[i]+=img*pulse*sqrt(pg+1)*state[i+indPG];
 		}
@@ -33,7 +34,7 @@ void Simulator::calcLiuville(){
 			dif[i]+=img*conj(pulse)*sqrt(pg)*state[i-indPG];
 		}
 
-		// coh e-g
+		// probe側の相互作用
 		if(pg>0 && ae<maxAE){
 			dif[i]+=img*coherenceProbe*sqrt(pg)*sqrt(ae+1)*sqrt(totAtom-ae-af)*state[i-indPG+indAE];
 		}
@@ -41,7 +42,7 @@ void Simulator::calcLiuville(){
 			dif[i]+=img*coherenceProbe*sqrt(pg+1)*sqrt(ae)*sqrt(totAtom-ae-af+1)*state[i+indPG-indAE];
 		}
 
-		// coh e-f
+		// control側の相互作用
 		if(pf>0 && af>0 && ae<maxAE){
 			dif[i]+=img*coherenceControl*sqrt(pf)*sqrt(af)*sqrt(ae+1)*state[i-indPF-indAF+indAE];
 		}
@@ -65,6 +66,8 @@ void Simulator::calcProbabiliyOfLoss(){
 	probLossControl=0;
 	probLossProbe=0;
 	probLossAtom=0;
+
+	//ロスが起きる確率を計算
 	for(i=0;i<vecSize;i++){
 		pg = getIdToPG(i);
 		pf = getIdToPF(i);
@@ -73,10 +76,13 @@ void Simulator::calcProbabiliyOfLoss(){
 		probLossProbe += norm(state[i])*pg;
 		probLossControl += norm(state[i])*pf;
 	}
+
+	// ロスは消滅演算子に加えて微小時間と寿命の定数に比例
 	probLossAtom*=dt*life;
 	probLossProbe*=dt*lossProbe;
 	probLossControl*=dt*lossControl;
 
+	// 乱数を利用してロスが起きるかどうかを判定
 	flagLossAtom = (useLossAtom)&(r->next()<probLossAtom);
 	flagLossProbe = (useLossProbe)&(r->next()<probLossProbe);
 	flagLossControl = (useLossControl)&(r->next()<probLossControl);
@@ -87,6 +93,7 @@ void Simulator::calcProjection(){
 
 	for(i=0;i<vecSize;i++)dif[i]=0;
 
+	// 原子の自然放出が起きた場合の計算
 	// todo eからaとfにランダムに落ちるようにする
 	if(flagLossAtom){
 		for(i=0;i<vecSize;i++){
@@ -98,6 +105,7 @@ void Simulator::calcProjection(){
 			}
 		}
 	}
+	//probeの共振器から光子が抜けた場合
 	if(flagLossProbe){
 		for(i=0;i<vecSize;i++){
 			pg = getIdToPG(i);
@@ -108,6 +116,7 @@ void Simulator::calcProjection(){
 			}
 		}
 	}
+	//controlの共振器から光子が抜けた場合
 	if(flagLossControl){
 		for(i=0;i<vecSize;i++){
 			pf = getIdToPF(i);
@@ -120,6 +129,7 @@ void Simulator::calcProjection(){
 	}
 
 	//ロスがなかった時の期待値の補正
+	//あと対角和とシステム中のエネルギー量の計算
 	trace=0;
 	energy=0;
 	for(i=0;i<vecSize;i++){

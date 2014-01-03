@@ -54,7 +54,7 @@ void Simulator::loadParameter(ParameterSet* par){
 
 // 読み込んだパラメータから使うパラメータを初期化
 void Simulator::initParameter(){
-	// array index
+	// ベクトルの添字と各量子の個数の対応を作成
 	indPG=1;
 	indAE=indPG*(maxPG+1);
 	indPF=indAE*(maxAE+1);
@@ -62,7 +62,7 @@ void Simulator::initParameter(){
 	vecSize=indAF*(maxAF+1);
 	maxEne=maxPG+maxAE+maxPF;
 
-	// const value
+	// 定数の設定と配列の初期化
 	seed=(int)time(NULL);
 	img=complex<double>(0,1);
 	step=0;
@@ -74,16 +74,18 @@ void Simulator::initParameter(){
 	lossProbabilityLogProbe.clear();
 	endFlag=false;
 
-	// memory allocate
-	r=new Random(seed);
+	// メモリ領域の確保
+//	r=new Random(seed);
+	r = new Random();
 	state= new complex<double>[vecSize];
 	dif= new complex<double>[vecSize];
 	ene = new double[maxEne+1];
 
+	// 内部状態を真空に初期化
 	state[0]=1;
 }
 
 //ログの初期化
 void Simulator::initLogging(){
-	cout.precision(3);
+	cout.precision(8);
 }

@@ -27,7 +27,8 @@ public:
 	Application(int argv,char** argc){
 		_argv=argv;
 		_argc=argc;
+		inter=NULL;
+		parameter=NULL;
 	}
-	virtual ~Application();
 	virtual void start();
 };

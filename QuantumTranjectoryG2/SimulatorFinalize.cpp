@@ -1,22 +1,28 @@
 
+#include "Simulator.h"
+#include "Random.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 using namespace std;
 
 #ifdef _MSC_VER
+//マクロの再定義の警告を無視
+#pragma warning(disable: 4005)
 #include <conio.h>
 #include <Windows.h>
 #endif
 
-#include "Simulator.h"
-#include "Random.h"
-
-
 // 終了条件のチェック
 void Simulator::checkCondition(){
+
+	//ステップ数の終了チェック
 	if(step>maxstep)endFlag=true;
+	//パルスを入射した場合、パルスが入りきった後にシステム内のエネルギーが一定以下になったら終了
 	if(usePulse && energy<eps && dt*step>pulseWidth)endFlag=true;
+
+	//キーボードが押された場合、途中で中断したり中間状態を出力したりする
 #ifdef _MSC_VER
 	if(_kbhit()){
 		char c = _getch();
@@ -35,11 +41,14 @@ void Simulator::checkCondition(){
 
 // ログ保存
 void Simulator::logging(){
+
+	//ロスが起きた時間をメモしておく
 	if(loggingLossTimeFlag){
 		if(flagLossAtom)lossTimeLogAtom.push_back(dt*step);
 		if(flagLossProbe)lossTimeLogProbe.push_back(dt*step);
 		if(flagLossControl)lossTimeLogControl.push_back(dt*step);
 	}
+	//ロスが起きる確率をメモしておく（ロスが起きる確率が共振器内部の光子数やシステムの透過率に比例する）
 	if(step%loggingUnit==0){
 		if(loggingLossTimeFlag){
 			lossProbabilityLogAtom.push_back(probLossAtom);
@@ -52,10 +61,13 @@ void Simulator::logging(){
 
 // ログ書き込み
 void Simulator::loggingSave(){
+
 	stringstream ss;
 	ss << "log_" << _unit << "_" << _id  << "_";
 	ofstream ofs;
 	unsigned int i;
+
+	// 原子のロスを出力
 	if(useLossAtom){
 		ofs.open(ss.str()+"time_atom.txt",ios::out);
 		for(i=0;i<lossTimeLogAtom.size();i++){
@@ -68,6 +80,8 @@ void Simulator::loggingSave(){
 		}
 		ofs.close();
 	}
+
+	// probeのロスを出力
 	if(useLossProbe){
 		ofs.open(ss.str()+"time_probe.txt",ios::out);
 		for(i=0;i<lossTimeLogProbe.size();i++){
@@ -80,6 +94,8 @@ void Simulator::loggingSave(){
 		}
 		ofs.close();
 	}
+
+	// controlのロスを出力
 	if(useLossControl){
 		ofs.open(ss.str()+"time_control.txt",ios::out);
 		for(i=0;i<lossTimeLogControl.size();i++){
@@ -94,6 +110,7 @@ void Simulator::loggingSave(){
 	}
 }
 
+//確保したオブジェクトを解放
 void Simulator::releaseParameter(){
 	delete r;
 	delete[] state;

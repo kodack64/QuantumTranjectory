@@ -16,11 +16,13 @@ using namespace std;
 #include <omp.h>
 #endif
 
+// 値の設定
 void CommandSetParameter::execute(ParameterSet* par,queue<Command*>& coms){
 	par->setParam(_paramName,_value);
 	cout << ">> set " << _paramName << " -> " << _value << endl;
 }
 
+// 値の加減
 void CommandDifSetParameter::execute(ParameterSet* par,queue<Command*>& coms){
 	try{
 		if(_type=="int"){
@@ -41,11 +43,12 @@ void CommandDifSetParameter::execute(ParameterSet* par,queue<Command*>& coms){
 	}
 }
 
+// 設定値の表示
 void CommandDescParameter::execute(ParameterSet* par,queue<Command*>& coms){
 	par->outputAllParameter(cout);
 }
 
-
+// パラメータファイルのロード
 void CommandSetParameterFile::execute(ParameterSet* par,queue<Command*>& coms){
 	ifstream ifs(_fileName,ios::in);
 	if(!ifs){
@@ -63,8 +66,10 @@ void CommandSetParameterFile::execute(ParameterSet* par,queue<Command*>& coms){
 	}
 }
 
+// 計算の実行
 void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 
+	// 試行回数と実行IDの取得
 	int i_repeatNum;
 	try{
 		i_repeatNum = boost::lexical_cast<int>(_executeNum);
@@ -79,6 +84,8 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 		i_unit=0;
 	}
 
+
+	// 実行時のパラメータをログに保存
 	ofstream ofs;
 	stringstream ss;
 	ss << "log_" << i_unit << "_parameter.txt" << endl;
@@ -88,6 +95,7 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 		ofs.close();
 	}
 
+	// 並列計算時はスレッドを分割し計算
 #ifdef _OPENMP
 	int count=0;
 #pragma omp parallel
@@ -110,6 +118,7 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 
 #else
 
+	// 並列計算でない場合は普通に計算
 	cout << ">> start simulator " << endl;
 	Simulator* sim = new Simulator();
 	for(int i=0;i<i_repeatNum;i++){
@@ -122,6 +131,7 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 #endif
 }
 
+// データから相関の計算
 void CommandCalcG2::execute(ParameterSet* par,queue<Command*>& coms){
 	int i_unit;
 	try{
@@ -147,6 +157,7 @@ void CommandCalcG2::execute(ParameterSet* par,queue<Command*>& coms){
 	cout << ">>finish" << endl;
 }
 
+// コマンドファイルのロード
 void CommandScript::execute(ParameterSet* par,queue<Command*>& coms){
 	int i_repeatNum;
 	try{
@@ -177,6 +188,7 @@ void CommandScript::execute(ParameterSet* par,queue<Command*>& coms){
 	}
 }
 
+// ヒストグラムの生成
 void CommandCalcHistgram::execute(ParameterSet* par,queue<Command*>& coms){
 }
 
