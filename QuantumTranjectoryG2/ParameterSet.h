@@ -102,12 +102,12 @@ public:
 		param[str]=val;
 	}
 	virtual void outputAllParameter(ostream &out){
-		out << ">>> **********" << endl;
+		out << "#   **********" << endl;
 		auto ite = param.begin();
 		while(ite!=param.end()){
-			out << ">>> " << ite->first << " = " << ite->second << endl;
+			out << "#   " << ite->first << " = " << ite->second << endl;
 			ite++;
 		}
-		out << ">>> **********" << endl;
+		out << "#   **********" << endl;
 	}
 };

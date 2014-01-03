@@ -73,6 +73,14 @@ void Simulator::initParameter(){
 	lossProbabilityLogControl.clear();
 	lossProbabilityLogProbe.clear();
 	endFlag=false;
+	loggingOffset=0;
+	trace=0;
+	energy=0;
+	edgePG=0;
+	edgePF=0;
+	edgeAE=0;
+	edgeAF=0;
+	edgeAll=0;
 
 	// ƒƒ‚ƒŠ—Ìˆæ‚ÌŠm•Û
 //	r=new Random(seed);

@@ -19,27 +19,27 @@ using namespace std;
 // 値の設定
 void CommandSetParameter::execute(ParameterSet* par,queue<Command*>& coms){
 	par->setParam(_paramName,_value);
-	cout << ">> set " << _paramName << " -> " << _value << endl;
+	cout << "# set " << _paramName << " -> " << _value << endl;
 }
 
 // 値の加減
-void CommandDifSetParameter::execute(ParameterSet* par,queue<Command*>& coms){
+void CommandSetDifParameter::execute(ParameterSet* par,queue<Command*>& coms){
 	try{
 		if(_type=="int"){
 			int val = boost::lexical_cast<int>(par->getParamInt(_paramName,0));
 			int dif = boost::lexical_cast<int>(_value);
 			par->setParam(_paramName,boost::lexical_cast<string>(val+dif));
-			cout << ">> difset " << _paramName << " " << val << " -> " << val+dif << endl;
+			cout << "# difset " << _paramName << " " << val << " -> " << val+dif << endl;
 		}else if(_type=="double"){
 			double val = boost::lexical_cast<double>(par->getParamDouble(_paramName,0));
 			double dif = boost::lexical_cast<double>(_value);
 			par->setParam(_paramName,boost::lexical_cast<string>(val+dif));
-			cout << ">> difset " << _paramName << " " << val << " -> " << val+dif << endl;
+			cout << "# difset " << _paramName << " " << val << " -> " << val+dif << endl;
 		}else{
-			cout << ">> unknown type " << _type <<endl;
+			cout << "# unknown type " << _type <<endl;
 		}
 	}catch(boost::bad_lexical_cast e){
-		cout << ">> cannot cast param : " << _paramName << " or " << _value << endl;
+		cout << "# cannot cast param : " << _paramName << " or " << _value << endl;
 	}
 }
 
@@ -62,7 +62,7 @@ void CommandSetParameterFile::execute(ParameterSet* par,queue<Command*>& coms){
 		if(stringArray.size()<=1)continue;
 		if(stringArray[0][0]=='#')continue;
 		par->setParam(stringArray[0],stringArray[1]);
-		cout << ">>set " << stringArray[0] << " " << stringArray[1] << " @" << _fileName << endl; 
+		cout << "# set " << stringArray[0] << " " << stringArray[1] << " @" << _fileName << endl; 
 	}
 }
 
@@ -119,14 +119,14 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 #else
 
 	// 並列計算でない場合は普通に計算
-	cout << ">> start simulator " << endl;
+	cout << "# start simulator " << endl;
 	Simulator* sim = new Simulator();
 	for(int i=0;i<i_repeatNum;i++){
 		cout << ">> " << i << " / " << i_repeatNum << " try" << endl;
 		sim->execute(i_unit,i,par);
 	}
 	delete sim;
-	cout << ">>finish" << endl;
+	cout << "# finish" << endl;
 
 #endif
 }
@@ -149,12 +149,12 @@ void CommandCalcG2::execute(ParameterSet* par,queue<Command*>& coms){
 		par->outputAllParameter(ofs);
 		ofs.close();
 	}
-	cout << ">> start simulator " << endl;
+	cout << "#  start simulator " << endl;
 	Simulator* sim = new Simulator();
-	cout << ">> base try" << endl;
+	cout << "#  base try" << endl;
 	sim->execute(i_unit,0,par);
 	delete sim;
-	cout << ">>finish" << endl;
+	cout << "# finish" << endl;
 }
 
 // コマンドファイルのロード
@@ -167,7 +167,7 @@ void CommandScript::execute(ParameterSet* par,queue<Command*>& coms){
 	}
 	ifstream ifs(_scriptFile,ios::in);
 	if(!ifs || ifs.eof()){
-		cout << ">>file not found" << endl;
+		cout << "# file not found" << endl;
 		return;
 	}
 	ifs.close();
@@ -179,7 +179,7 @@ void CommandScript::execute(ParameterSet* par,queue<Command*>& coms){
 			if(line.length()>0){
 				Command* com =CommandFactory::createCommand(line);
 				if(com!=NULL){
-					cout << ">> add queue : " << line << endl;
+					cout << "#   add queue : " << line << endl;
 					coms.push(com);
 				}
 			}

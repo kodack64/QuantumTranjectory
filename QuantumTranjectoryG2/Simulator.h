@@ -46,6 +46,11 @@ private:
 	int af;
 	double trace;
 	double energy;
+	double edgePG;
+	double edgeAE;
+	double edgePF;
+	double edgeAF;
+	double edgeAll;
 	int step;
 
 	// temp variable
@@ -115,6 +120,7 @@ private:
 	vector<double> lossProbabilityLogAtom;
 	vector<double> lossProbabilityLogControl;
 	vector<double> lossProbabilityLogProbe;
+	int loggingOffset;
 
 	// indirectry given parameters
 	int indPG;

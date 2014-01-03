@@ -3,6 +3,7 @@
 #include "Random.h"
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <sstream>
 using namespace std;
@@ -24,18 +25,30 @@ void Simulator::checkCondition(){
 
 	//キーボードが押された場合、途中で中断したり中間状態を出力したりする
 #ifdef _MSC_VER
+#ifndef _OPENMP
 	if(_kbhit()){
 		char c = _getch();
-		if(c==VK_RETURN){
-			cout << "execution aborted" << endl;
+		if(c==VK_ESCAPE){
+			cout << "# aborted" << endl;
 			endFlag = true;
 		}
 		if(c==VK_SPACE){
-			cout << "energy : " << energy << endl;
-			cout << "step : " << step << " / " << maxstep << endl;
-			cout << "prob : " << probLossProbe << endl;
+			cout << "# status" << endl;
+			cout << "#  energy : " << energy << endl;
+			cout << "#  step : " << step << " / " << maxstep << endl;
+			cout << "#  prob : " << probLossProbe << endl;
+			cout << "#  edgepg : " << edgePG << endl;
+			cout << "#  edgeae : " << edgeAE << endl;
+			cout << "#  edgepf : " << edgePF << endl;
+			cout << "#  edgeaf : " << edgeAF << endl;
+			cout << "#  edgeall : " << edgeAll << endl;
+		}
+		if(c==VK_RETURN){
+			cout << "# log saved" << endl;
+			loggingSave();
 		}
 	}
+#endif
 #endif
 }
 
@@ -62,6 +75,9 @@ void Simulator::logging(){
 // ログ書き込み
 void Simulator::loggingSave(){
 
+	auto iomode = loggingOffset==0?ios::out:ios::app;
+	int newOffset = max(max(lossProbabilityLogAtom.size(),lossProbabilityLogProbe.size()),lossProbabilityLogControl.size());
+
 	stringstream ss;
 	ss << "log_" << _unit << "_" << _id  << "_";
 	ofstream ofs;
@@ -69,45 +85,56 @@ void Simulator::loggingSave(){
 
 	// 原子のロスを出力
 	if(useLossAtom){
-		ofs.open(ss.str()+"time_atom.txt",ios::out);
+		ofs.open(ss.str()+"time_atom.txt",iomode);
 		for(i=0;i<lossTimeLogAtom.size();i++){
 			ofs << lossTimeLogAtom[i] << endl;
 		}
 		ofs.close();
-		ofs.open(ss.str()+"prob_atom.txt",ios::out);
+		lossTimeLogAtom.clear();
+
+		ofs.open(ss.str()+"prob_atom.txt",iomode);
 		for(i=0;i<lossProbabilityLogAtom.size();i++){
-			ofs << i*loggingUnit*dt << " " << lossProbabilityLogAtom[i] << endl;
+			ofs << (loggingOffset+i)*loggingUnit*dt << " " << lossProbabilityLogAtom[i]/dt/life << endl;
 		}
 		ofs.close();
+		lossProbabilityLogAtom.clear();
 	}
 
 	// probeのロスを出力
 	if(useLossProbe){
-		ofs.open(ss.str()+"time_probe.txt",ios::out);
+		ofs.open(ss.str()+"time_probe.txt",iomode);
 		for(i=0;i<lossTimeLogProbe.size();i++){
 			ofs << lossTimeLogProbe[i] << endl;
 		}
 		ofs.close();
-		ofs.open(ss.str()+"prob_probe.txt",ios::out);
+		lossTimeLogProbe.clear();
+
+		ofs.open(ss.str()+"prob_probe.txt",iomode);
 		for(i=0;i<lossProbabilityLogProbe.size();i++){
-			ofs << i*loggingUnit*dt << " " <<  lossProbabilityLogProbe[i] << endl;
+			ofs << (loggingOffset+i)*loggingUnit*dt << " " <<  lossProbabilityLogProbe[i]/dt/lossProbe << endl;
 		}
 		ofs.close();
+		lossProbabilityLogProbe.clear();
 	}
 
 	// controlのロスを出力
 	if(useLossControl){
-		ofs.open(ss.str()+"time_control.txt",ios::out);
+		ofs.open(ss.str()+"time_control.txt",iomode);
 		for(i=0;i<lossTimeLogControl.size();i++){
 			ofs << lossTimeLogControl[i] << endl;
 		}
 		ofs.close();
-		ofs.open(ss.str()+"prob_control.txt",ios::out);
+		lossTimeLogControl.clear();
+
+		ofs.open(ss.str()+"prob_control.txt",iomode);
 		for(i=0;i<lossProbabilityLogControl.size();i++){
-			ofs << i*loggingUnit*dt << " " <<  lossProbabilityLogControl[i] << endl;
+			ofs << (loggingOffset+i)*loggingUnit*dt << " " <<  lossProbabilityLogControl[i]/dt/lossControl << endl;
 		}
 		ofs.close();
+		lossProbabilityLogControl.clear();
 	}
+
+	loggingOffset +=newOffset;
 }
 
 //確保したオブジェクトを解放

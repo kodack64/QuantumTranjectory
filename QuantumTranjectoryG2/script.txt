@@ -1,3 +1,2 @@
-difset maxPG 1 int
-difset dt 1e-2 double
+load parameter.txt
 execute 1

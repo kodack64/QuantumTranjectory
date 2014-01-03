@@ -15,15 +15,15 @@ void CommandFactory::setCommandFunc(){
 		if(words.size()==3){
 			return (Command*)(new CommandSetParameter(words.at(1),words.at(2)));
 		}else{
-			cout << ">> format : set <parameter name> <parameter value>" << endl;
+			cout << "# format : set <parameter name> <parameter value>" << endl;
 			return (Command*)NULL;
 		}
 	}));
-	funcmap.insert(make_pair("difset",[](vector<string> words){
+	funcmap.insert(make_pair("setdif",[](vector<string> words){
 		if(words.size()==4){
-			return (Command*)(new CommandDifSetParameter(words.at(1),words.at(2),words.at(3)));
+			return (Command*)(new CommandSetDifParameter(words.at(1),words.at(2),words.at(3)));
 		}else{
-			cout << ">> format : difset <parameter name> <parameter dif value> <parameter type>" << endl;
+			cout << "# format : setdif <parameter name> <parameter dif value> <parameter type>" << endl;
 			return (Command*)NULL;
 		}
 	}));
@@ -34,7 +34,7 @@ void CommandFactory::setCommandFunc(){
 		if(words.size()==2){
 			return (Command*)(new CommandSetParameterFile(words.at(1)));
 		}else{
-			cout << ">> format : load <parameter file>" << endl;
+			cout << "# format : load <parameter file>" << endl;
 			return (Command*)NULL;
 		}
 	}));
@@ -42,7 +42,7 @@ void CommandFactory::setCommandFunc(){
 		if(words.size()==2){
 			return (Command*)(new CommandExecute(words.at(1)));
 		}else{
-			cout << ">> format : execute <repeat number>" << endl;
+			cout << "# format : execute <repeat number>" << endl;
 			return (Command*)NULL;
 		}
 	}));
@@ -50,7 +50,7 @@ void CommandFactory::setCommandFunc(){
 		if(words.size()==3){
 			return (Command*)(new CommandScript(words.at(1),words.at(2)));
 		}else{
-			cout << ">> format : script <script file> <repeat number>" << endl;
+			cout << "# format : script <script file> <repeat number>" << endl;
 			return (Command*)NULL;
 		}
 	}));
@@ -58,7 +58,7 @@ void CommandFactory::setCommandFunc(){
 		if(words.size()==2){
 			return (Command*)(new CommandCalcHistgram(words.at(1)));
 		}else{
-			cout << ">> format : histgram <log unit number>" << endl;
+			cout << "# format : histgram <log unit number>" << endl;
 			return (Command*)NULL;
 		}
 	}));
@@ -66,7 +66,7 @@ void CommandFactory::setCommandFunc(){
 		if(words.size()==2){
 			return (Command*)(new CommandCalcPower(words.at(1)));
 		}else{
-			cout << ">> format : power <log unit number>" << endl;
+			cout << "# format : power <log unit number>" << endl;
 			return (Command*)NULL;
 		}
 	}));
@@ -74,7 +74,7 @@ void CommandFactory::setCommandFunc(){
 		if(words.size()==1){
 			return (Command*)(new CommandCalcG2());
 		}else{
-			cout << ">> format : g2" << endl;
+			cout << "# format : g2" << endl;
 			return (Command*)NULL;
 		}
 	}));
@@ -84,6 +84,9 @@ void CommandFactory::setCommandFunc(){
 Command* CommandFactory::createCommand(string line){
 
 	vector <string> words;
+
+	if(funcmap.empty())setCommandFunc();
+
 	// ƒRƒ}ƒ“ƒh‚Ì•ªŠ„
 	boost::algorithm::split(words,line,boost::is_space());
 
@@ -92,14 +95,14 @@ Command* CommandFactory::createCommand(string line){
 	if(funcmap.find(words[0])!= funcmap.end()){
 		return funcmap[words[0]](words);
 	}else{
-		cout << ">> invalid command" << endl;
-		cout << ">> commands list:" << endl;
+		cout << "# invalid command" << endl;
+		cout << "# commands list:" << endl;
 		auto ite = funcmap.begin();
 		while(ite!=funcmap.end()){
-			cout << ">>> " << ite->first << endl;
+			cout << "#  " << ite->first << endl;
 			ite++;
 		}
-			cout << ">>> exit" << endl;
+		cout << "#  exit" << endl;
 		return NULL;
 	}
 }

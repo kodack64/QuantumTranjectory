@@ -2,6 +2,10 @@
 #include "Simulator.h"
 #include "Random.h"
 
+
+#include <iostream>
+#include <conio.h>
+
 // その時刻でのパルスの複素振幅を計算
 void Simulator::calcPulseSize(){
 	pulse=pulsePump*(complex<double>(cos(step*dt*pulseDetune),sin(step*dt*pulseDetune)));
@@ -71,7 +75,7 @@ void Simulator::calcProbabiliyOfLoss(){
 	for(i=0;i<vecSize;i++){
 		pg = getIdToPG(i);
 		pf = getIdToPF(i);
-		af = getIdToAF(i);
+		ae = getIdToAE(i);
 		probLossAtom += norm(state[i])*ae;
 		probLossProbe += norm(state[i])*pg;
 		probLossControl += norm(state[i])*pf;
@@ -86,12 +90,24 @@ void Simulator::calcProbabiliyOfLoss(){
 	flagLossAtom = (useLossAtom)&(r->next()<probLossAtom);
 	flagLossProbe = (useLossProbe)&(r->next()<probLossProbe);
 	flagLossControl = (useLossControl)&(r->next()<probLossControl);
+
+	//debug
+	flagLossAtom=flagLossControl=false;
 }
 
 // 測定の結果に応じて射影
 void Simulator::calcProjection(){
 
 	for(i=0;i<vecSize;i++)dif[i]=0;
+
+	if(flagLossProbe){
+		for(int i=0;i<vecSize;i++){
+			cout << norm(state[i]) << " ";
+		}
+		cout << endl;
+		cout << edgePG << endl;
+		cout << edgeAE << endl;
+	}
 
 	// 原子の自然放出が起きた場合の計算
 	// todo eからaとfにランダムに落ちるようにする
@@ -132,6 +148,11 @@ void Simulator::calcProjection(){
 	//あと対角和とシステム中のエネルギー量の計算
 	trace=0;
 	energy=0;
+	edgePG=0;
+	edgePF=0;
+	edgeAE=0;
+	edgeAF=0;
+	edgeAll=0;
 	for(i=0;i<vecSize;i++){
 		ae = getIdToAE(i);
 		pg = getIdToPG(i);
@@ -147,9 +168,31 @@ void Simulator::calcProjection(){
 		}
 		trace+=norm(state[i]);
 		energy+=norm(state[i])*(ae+pg+pf);
+		if(ae==maxAE)edgeAE+=norm(state[i]);
 	}
 
 	//正規化
 	trace=sqrt(trace);
-	for(i=0;i<vecSize;i++)state[i]/=trace;
+	for(i=0;i<vecSize;i++){
+		state[i]/=trace;
+
+		ae = getIdToAE(i);
+		pg = getIdToPG(i);
+		pf = getIdToPF(i);
+		af = getIdToAF(i);
+		if(ae==maxAE)edgeAE+=norm(state[i]);
+		if(af==maxAF)edgeAF+=norm(state[i]);
+		if(pg==maxPG)edgePG+=norm(state[i]);
+		if(pf==maxPF)edgePF+=norm(state[i]);
+		if(ae==maxAE || af==maxAF || pg==maxPG || pf==maxPF) edgeAll += norm(state[i]);
+	}
+
+	if(flagLossProbe){
+		for(int i=0;i<vecSize;i++){
+			cout << norm(state[i]) << " ";
+		}
+		cout << endl;
+		cout << edgePG << endl;
+		cout << edgeAE << endl;
+	}
 }

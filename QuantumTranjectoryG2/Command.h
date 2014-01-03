@@ -58,13 +58,13 @@ public:
 };
 
 
-class CommandDifSetParameter : public Command{
+class CommandSetDifParameter : public Command{
 private:
 	string _paramName;
 	string _value;
 	string _type;
 public:
-	CommandDifSetParameter(string paramName,string value,string type)
+	CommandSetDifParameter(string paramName,string value,string type)
 		:_paramName(paramName)
 		,_value(value)
 		,_type(type)
