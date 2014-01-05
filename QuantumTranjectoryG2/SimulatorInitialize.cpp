@@ -24,6 +24,10 @@ void Simulator::loadParameter(ParameterSet* par){
 	useLossProbe = par->getParamBoolean(_NAME(useLossProbe),useLossProbe);
 	useLossAtom = par->getParamBoolean(_NAME(useLossAtom),useLossAtom);
 	useLossControl = par->getParamBoolean(_NAME(useLossControl),useLossControl);
+	postselAtom = par->getParamBoolean(_NAME(postselAtom),postselAtom);
+	postselProbe = par->getParamBoolean(_NAME(postselProbe),postselProbe);
+	postselControl = par->getParamBoolean(_NAME(postselControl),postselControl);
+
 	usePulse = par->getParamBoolean(_NAME(usePulse),usePulse);
 
 	//	time
@@ -46,7 +50,8 @@ void Simulator::loadParameter(ParameterSet* par){
 	//	lifetime
 	lossProbe = par->getParamDouble(_NAME(lossProbe),lossProbe);
 	lossControl = par->getParamDouble(_NAME(lossControl),lossControl);
-	life = par->getParamDouble(_NAME(life),life);
+	lossAtom = par->getParamDouble(_NAME(lossAtom),lossAtom);
+	forceLossProbeTime = par->getParamInt(_NAME(forceLossProbeTime),forceLossProbeTime);
 
 	// end condition
 	eps = par->getParamDouble(_NAME(eps),eps);

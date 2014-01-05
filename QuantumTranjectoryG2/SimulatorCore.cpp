@@ -82,32 +82,24 @@ void Simulator::calcProbabiliyOfLoss(){
 	}
 
 	// ロスは消滅演算子に加えて微小時間と寿命の定数に比例
-	probLossAtom*=dt*life;
+	probLossAtom*=dt*lossAtom;
 	probLossProbe*=dt*lossProbe;
 	probLossControl*=dt*lossControl;
 
 	// 乱数を利用してロスが起きるかどうかを判定
-	flagLossAtom = (useLossAtom)&(r->next()<probLossAtom);
-	flagLossProbe = (useLossProbe)&(r->next()<probLossProbe);
-	flagLossControl = (useLossControl)&(r->next()<probLossControl);
+	flagLossAtom = (useLossAtom)&(r->next()<probLossAtom)&(!postselAtom);
+	flagLossProbe = (useLossProbe)&(r->next()<probLossProbe)&(!postselProbe);
+	flagLossControl = (useLossControl)&(r->next()<probLossControl)&(!postselControl);
 
-	//debug
-	flagLossAtom=flagLossControl=false;
+	//強制的にロスさせる場合はそのようにする
+	if(forceLossProbeTime==step)flagLossProbe=true;
+
 }
 
 // 測定の結果に応じて射影
 void Simulator::calcProjection(){
 
 	for(i=0;i<vecSize;i++)dif[i]=0;
-
-	if(flagLossProbe){
-		for(int i=0;i<vecSize;i++){
-			cout << norm(state[i]) << " ";
-		}
-		cout << endl;
-		cout << edgePG << endl;
-		cout << edgeAE << endl;
-	}
 
 	// 原子の自然放出が起きた場合の計算
 	// todo eからaとfにランダムに落ちるようにする
@@ -158,7 +150,7 @@ void Simulator::calcProjection(){
 		pg = getIdToPG(i);
 		pf = getIdToPF(i);
 		if(!flagLossAtom){
-			state[i]-=0.5*ae*life*dt*state[i];
+			state[i]-=0.5*ae*lossAtom*dt*state[i];
 		}
 		if(!flagLossProbe){
 			state[i]-=0.5*pg*lossProbe*dt*state[i];
@@ -188,11 +180,10 @@ void Simulator::calcProjection(){
 	}
 
 	if(flagLossProbe){
-		for(int i=0;i<vecSize;i++){
-			cout << norm(state[i]) << " ";
+		if(forceLossProbeTime==step){
+			cout << "# probe loss forced" << endl;
+		}else{
+			cout << "# probe loss" << endl;
 		}
-		cout << endl;
-		cout << edgePG << endl;
-		cout << edgeAE << endl;
 	}
 }

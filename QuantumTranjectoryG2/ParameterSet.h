@@ -45,8 +45,15 @@ public:
 
 		param["lossProbe"] = "3e-2";
 		param["lossControl"] ="3e-2";
-		param["life"] = "3e-0";
+		param["lossAtom"] = "3e-0";
 		param["eps"] = "1e-3";
+
+		param["postselProbe"]="false";
+		param["postselControl"]="false";
+		param["postselAtom"]="false";
+
+		param["forceLossProbeTime"]="-1";
+		
 	}
 
 	virtual string getParam(string str,string def){

@@ -33,13 +33,13 @@ private:
 	virtual void releaseParameter();
 	virtual void loggingSave();
 
-	// macro
+	// idから量子数を取得するマクロ
 	inline int getIdToPG(int i){return (i%indAE)/indPG;}
 	inline int getIdToAE(int i){return (i%indPF)/indAE;}
 	inline int getIdToPF(int i){return (i%indAF)/indPF;}
 	inline int getIdToAF(int i){return (i%vecSize)/indAF;}
 
-	// loop variable
+	// ループ変数
 	int pg;
 	int ae;
 	int pf;
@@ -52,63 +52,71 @@ private:
 	double edgeAF;
 	double edgeAll;
 	int step;
-
-	// temp variable
 	int i;
 	double sum;
+	bool endFlag;
+	int seed;
 
-	// pulse variable
+	// パルスの複素振幅と離調
 	complex<double> pulse;
 	complex<double> pulseRot;
 
-	// loss variable
+	// そのstepで量子が失われたかどうか
 	bool flagLossAtom;
 	bool flagLossControl;
 	bool flagLossProbe;
 
+	//そのstepで量子が失われる確率
 	double probLossProbe;
 	double probLossControl;
 	double probLossAtom;
 
+	//量子が失われなかった場合をポストセレクトするか
+	bool postselAtom;
+	bool postselControl;
+	bool postselProbe;
 
-	// constant variable
+	//最大として切り落とす量子の数
 	int maxPG;
 	int maxAE;
 	int maxPF;
 	int maxAF;
 	int totAtom;
 
-	//  given parameters
-	// use flag
+	//各ロスを無視するか
 	bool useLossProbe;
 	bool useLossAtom;
 	bool useLossControl;
-	bool usePulse;
 
 	//	time
 	double dt;
 	long maxstep;
 
-	//	input
+	//入力をパルス形状にするかどうか
+	bool usePulse;
+	//パルス強度
 	double pulsePump;
+	//入力の離調
 	double pulseDetune;
+	//パルスの長さ
 	double pulseWidth;
 
-	//	coherence
+	//相互作用の強さ
 	double coherenceProbe;
 	double coherenceControl;
 
-	//	lifetime
+	//ロスの速度
 	double lossProbe;
 	double lossControl;
-	double life;
+	double lossAtom;
 
-	// end condition
-	bool endFlag;
+	//強制的にロスさせるタイミング
+	int forceLossProbeTime;
+
+	// 終了条件
 	double eps;
-	int seed;
 
-	// logging
+	// ログ関連
 	int loggingUnit;
 	bool loggingLossTimeFlag;
 	bool loggingLossProbabilityFlag;
@@ -122,7 +130,7 @@ private:
 	vector<double> lossProbabilityLogProbe;
 	int loggingOffset;
 
-	// indirectry given parameters
+	// idを振るための数
 	int indPG;
 	int indAE;
 	int indPF;
@@ -130,11 +138,13 @@ private:
 	int vecSize;
 	int maxEne;
 
-	// const value
+	// 虚数単位
 	complex<double> img;
 
-	// memory allocate
+	// 乱数ジェネレータ
 	Random *r;
+
+	//状態関数と差分
 	complex<double>* state;
 	complex<double>* dif;
 	double* ene;

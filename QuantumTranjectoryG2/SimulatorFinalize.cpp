@@ -18,6 +18,8 @@ using namespace std;
 // 終了条件のチェック
 void Simulator::checkCondition(){
 
+	bool isLogged=false;
+
 	//ステップ数の終了チェック
 	if(step>maxstep)endFlag=true;
 	//パルスを入射した場合、パルスが入りきった後にシステム内のエネルギーが一定以下になったら終了
@@ -46,10 +48,16 @@ void Simulator::checkCondition(){
 		if(c==VK_RETURN){
 			cout << "# log saved" << endl;
 			loggingSave();
+			isLogged=true;
 		}
 	}
 #endif
 #endif
+
+	if(!isLogged && flagLossProbe){
+		cout << "# log saved" << endl;
+		loggingSave();
+	}
 }
 
 // ログ保存
@@ -94,7 +102,7 @@ void Simulator::loggingSave(){
 
 		ofs.open(ss.str()+"prob_atom.txt",iomode);
 		for(i=0;i<lossProbabilityLogAtom.size();i++){
-			ofs << (loggingOffset+i)*loggingUnit*dt << " " << lossProbabilityLogAtom[i]/dt/life << endl;
+			ofs << (loggingOffset+i)*loggingUnit*dt << " " << lossProbabilityLogAtom[i]/dt/lossAtom << endl;
 		}
 		ofs.close();
 		lossProbabilityLogAtom.clear();
