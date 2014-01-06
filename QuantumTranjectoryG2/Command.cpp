@@ -83,6 +83,12 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 	}catch(boost::bad_lexical_cast e){
 		i_unit=0;
 	}
+	int core;
+	try{
+		core = boost::lexical_cast<int>(par->getParamInt("core",0));
+	}catch(boost::bad_lexical_cast e){
+		core=8;
+	}
 
 
 	// 実行時のパラメータをログに保存
@@ -99,6 +105,7 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 #ifdef _OPENMP
 	int count=0;
 	cout << "# start simulator " << endl;
+	omp_set_num_threads(core);
 #pragma omp parallel
 	{
 		int mycore = omp_get_thread_num();

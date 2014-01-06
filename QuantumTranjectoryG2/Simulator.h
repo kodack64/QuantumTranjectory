@@ -118,8 +118,9 @@ private:
 
 	// ÉçÉOä÷òA
 	int loggingUnit;
-	bool loggingLossTimeFlag;
-	bool loggingLossProbabilityFlag;
+	bool loggingTime;
+	bool loggingProb;
+	bool loggingJump;
 	string loggingLossTimeName;
 	string loggingLossProbabilityName;
 	vector<double> lossTimeLogAtom;

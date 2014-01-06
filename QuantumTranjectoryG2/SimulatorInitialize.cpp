@@ -36,6 +36,9 @@ void Simulator::loadParameter(ParameterSet* par){
 
 	// logging
 	loggingUnit = par->getParamInt(_NAME(loggingUnit),loggingUnit);
+	loggingTime = par->getParamBoolean(_NAME(loggingTime),loggingTime);
+	loggingProb = par->getParamBoolean(_NAME(loggingProb),loggingProb);
+	loggingJump = par->getParamBoolean(_NAME(loggingJump),loggingJump);
 
 
 	//	input

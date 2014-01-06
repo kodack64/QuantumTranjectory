@@ -54,9 +54,9 @@ void Simulator::checkCondition(){
 #endif
 #endif
 
-	if(!isLogged && flagLossProbe){
-//		cout << "# log saved" << endl;
-//		loggingSave();
+	if(!isLogged && flagLossProbe && loggingJump){
+		cout << "# jump log" << endl;
+		loggingSave();
 	}
 }
 
@@ -64,29 +64,25 @@ void Simulator::checkCondition(){
 void Simulator::logging(){
 
 	//ロスが起きた時間をメモしておく
-	if(loggingLossTimeFlag){
+	if(loggingTime){
 		if(flagLossAtom)lossTimeLogAtom.push_back(dt*step);
 		if(flagLossProbe)lossTimeLogProbe.push_back(dt*step);
 		if(flagLossControl)lossTimeLogControl.push_back(dt*step);
 	}
 	//ロスが起きる確率をメモしておく（ロスが起きる確率が共振器内部の光子数やシステムの透過率に比例する）
-	if(step%loggingUnit==0){
-//		if(loggingLossTimeFlag){
+	if(loggingProb){
+		if(step%loggingUnit==0){
 			lossProbabilityLogAtom.push_back(probLossAtom);
 			lossProbabilityLogProbe.push_back(probLossProbe);
 			lossProbabilityLogControl.push_back(probLossControl);
-//		}
-//		cout << norm(state[0]) << endl;
+		}
 	}
 }
 
 // ログ書き込み
 void Simulator::loggingSave(){
 
-	cout << "begin log" << endl;
-
-//	auto iomode = loggingOffset==0?ios::out:ios::app;
-	auto iomode = ios::out;
+	auto iomode = loggingOffset==0?ios::out:ios::app;
 	int newOffset = max(max(lossProbabilityLogAtom.size(),lossProbabilityLogProbe.size()),lossProbabilityLogControl.size());
 
 	stringstream ss;
@@ -95,60 +91,76 @@ void Simulator::loggingSave(){
 	unsigned int i;
 
 	// 原子のロスを出力
-	if(useLossAtom){
-		ofs.open(ss.str()+"time_atom.txt",iomode);
-		for(i=0;i<lossTimeLogAtom.size();i++){
-			ofs << lossTimeLogAtom[i] << endl;
-		}
-		if(ofs.bad()){cout << "bad alloc " << endl;}
-		ofs.close();
-		lossTimeLogAtom.clear();
+	if(useLossAtom && !postselAtom){
 
-		ofs.open(ss.str()+"prob_atom.txt",iomode);
-		for(i=0;i<lossProbabilityLogAtom.size();i++){
-			ofs << (loggingOffset+i)*loggingUnit*dt << " " << lossProbabilityLogAtom[i]/dt/lossAtom << endl;
+		if(loggingTime){
+			ofs.open(ss.str()+"time_atom.txt",iomode);
+			for(i=0;i<lossTimeLogAtom.size();i++){
+				ofs << lossTimeLogAtom[i] << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
 		}
-		if(ofs.bad()){cout << "bad alloc " << endl;}
-		ofs.close();
+
+		if(loggingProb){
+			ofs.open(ss.str()+"prob_atom.txt",iomode);
+			for(i=0;i<lossProbabilityLogAtom.size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " " << lossProbabilityLogAtom[i]/dt/lossAtom << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
+		}
+
+		lossTimeLogAtom.clear();
 		lossProbabilityLogAtom.clear();
 	}
 
 	// probeのロスを出力
-	if(useLossProbe){
-		ofs.open(ss.str()+"time_probe.txt",iomode);
-		for(i=0;i<lossTimeLogProbe.size();i++){
-			ofs << lossTimeLogProbe[i] << endl;
-		}
-		if(ofs.bad()){cout << "bad alloc " << endl;}
-		ofs.close();
+	if(useLossProbe && !postselProbe){
 
-		ofs.open(ss.str()+"prob_probe.txt",iomode);
-		for(i=0;i<lossProbabilityLogProbe.size();i++){
-			ofs << (loggingOffset+i)*loggingUnit*dt << " " <<  lossProbabilityLogProbe[i]/dt/lossProbe << endl;
+		if(loggingTime){
+			ofs.open(ss.str()+"time_probe.txt",iomode);
+			for(i=0;i<lossTimeLogProbe.size();i++){
+				ofs << lossTimeLogProbe[i] << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
 		}
-		if(ofs.bad()){cout << "bad alloc " << endl;}
-		ofs.close();
+
+		if(loggingProb){
+			ofs.open(ss.str()+"prob_probe.txt",iomode);
+			for(i=0;i<lossProbabilityLogProbe.size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " " <<  lossProbabilityLogProbe[i]/dt/lossProbe << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
+		}
 
 		lossTimeLogProbe.clear();
 		lossProbabilityLogProbe.clear();
 	}
 
 	// controlのロスを出力
-	if(useLossControl){
-		ofs.open(ss.str()+"time_control.txt",iomode);
-		for(i=0;i<lossTimeLogControl.size();i++){
-			ofs << lossTimeLogControl[i] << endl;
+	if(useLossControl && !postselControl){
+		if(loggingTime){
+			ofs.open(ss.str()+"time_control.txt",iomode);
+			for(i=0;i<lossTimeLogControl.size();i++){
+				ofs << lossTimeLogControl[i] << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
 		}
-		if(ofs.bad()){cout << "bad alloc " << endl;}
-		ofs.close();
-		lossTimeLogControl.clear();
 
-		ofs.open(ss.str()+"prob_control.txt",iomode);
-		for(i=0;i<lossProbabilityLogControl.size();i++){
-			ofs << (loggingOffset+i)*loggingUnit*dt << " " <<  lossProbabilityLogControl[i]/dt/lossControl << endl;
+		if(loggingProb){
+			ofs.open(ss.str()+"prob_control.txt",iomode);
+			for(i=0;i<lossProbabilityLogControl.size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " " <<  lossProbabilityLogControl[i]/dt/lossControl << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
 		}
-		if(ofs.bad()){cout << "bad alloc " << endl;}
-		ofs.close();
+
+		lossTimeLogControl.clear();
 		lossProbabilityLogControl.clear();
 	}
 

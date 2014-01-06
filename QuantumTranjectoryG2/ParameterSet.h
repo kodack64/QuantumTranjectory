@@ -35,6 +35,9 @@ public:
 		param["maxstep"]="10000000";
 
 		param["loggingUnit"] = "1000";
+		param["loggingTime"] = "true";
+		param["loggingProb"] = "true";
+		param["loggingJump"] = "true";
 
 		param["pulsePump"] = "1.5e-1";
 		param["pulseDetune"] = "0e-1";
@@ -53,6 +56,8 @@ public:
 		param["postselAtom"]="false";
 
 		param["forceLossProbeTime"]="-1";
+
+		param["core"] = "8";
 		
 	}
 
