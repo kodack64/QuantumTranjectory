@@ -98,21 +98,28 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 	// 並列計算時はスレッドを分割し計算
 #ifdef _OPENMP
 	int count=0;
+	cout << "# start simulator " << endl;
 #pragma omp parallel
 	{
+		int mycore = omp_get_thread_num();
 		int myid;
 		Simulator* sim = new Simulator();
 		while(true){
-#pragma omp atomic
+#pragma omp critical
 			{
-				if(count>=i_repeatNum)break;
-				else{
+				if(count<i_repeatNum){
 					myid = count;
 					count++;
+					cout << " #" << mycore << " start " << myid << endl;
+				}else{
+					myid=-1;
 				}
 			}
+			if(myid==-1)break;
 			sim->execute(i_unit,myid,par);
 		}
+#pragma omp critical
+		cout << " #" << mycore << "end" << endl;
 		delete sim;
 	}
 

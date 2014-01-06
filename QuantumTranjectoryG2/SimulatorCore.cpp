@@ -183,7 +183,7 @@ void Simulator::calcProjection(){
 		if(forceLossProbeTime==step){
 			cout << "# probe loss forced" << endl;
 		}else{
-			cout << "# probe loss" << endl;
+//			cout << "# probe loss" << endl;
 		}
 	}
 }

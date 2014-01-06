@@ -55,8 +55,8 @@ void Simulator::checkCondition(){
 #endif
 
 	if(!isLogged && flagLossProbe){
-		cout << "# log saved" << endl;
-		loggingSave();
+//		cout << "# log saved" << endl;
+//		loggingSave();
 	}
 }
 
@@ -71,11 +71,11 @@ void Simulator::logging(){
 	}
 	//ロスが起きる確率をメモしておく（ロスが起きる確率が共振器内部の光子数やシステムの透過率に比例する）
 	if(step%loggingUnit==0){
-		if(loggingLossTimeFlag){
+//		if(loggingLossTimeFlag){
 			lossProbabilityLogAtom.push_back(probLossAtom);
 			lossProbabilityLogProbe.push_back(probLossProbe);
 			lossProbabilityLogControl.push_back(probLossControl);
-		}
+//		}
 //		cout << norm(state[0]) << endl;
 	}
 }
@@ -83,11 +83,14 @@ void Simulator::logging(){
 // ログ書き込み
 void Simulator::loggingSave(){
 
-	auto iomode = loggingOffset==0?ios::out:ios::app;
+	cout << "begin log" << endl;
+
+//	auto iomode = loggingOffset==0?ios::out:ios::app;
+	auto iomode = ios::out;
 	int newOffset = max(max(lossProbabilityLogAtom.size(),lossProbabilityLogProbe.size()),lossProbabilityLogControl.size());
 
 	stringstream ss;
-	ss << "log_" << _unit << "_" << _id  << "_";
+	ss << "data\\log_" << _unit << "_" << _id  << "_";
 	ofstream ofs;
 	unsigned int i;
 
@@ -97,6 +100,7 @@ void Simulator::loggingSave(){
 		for(i=0;i<lossTimeLogAtom.size();i++){
 			ofs << lossTimeLogAtom[i] << endl;
 		}
+		if(ofs.bad()){cout << "bad alloc " << endl;}
 		ofs.close();
 		lossTimeLogAtom.clear();
 
@@ -104,6 +108,7 @@ void Simulator::loggingSave(){
 		for(i=0;i<lossProbabilityLogAtom.size();i++){
 			ofs << (loggingOffset+i)*loggingUnit*dt << " " << lossProbabilityLogAtom[i]/dt/lossAtom << endl;
 		}
+		if(ofs.bad()){cout << "bad alloc " << endl;}
 		ofs.close();
 		lossProbabilityLogAtom.clear();
 	}
@@ -114,14 +119,17 @@ void Simulator::loggingSave(){
 		for(i=0;i<lossTimeLogProbe.size();i++){
 			ofs << lossTimeLogProbe[i] << endl;
 		}
+		if(ofs.bad()){cout << "bad alloc " << endl;}
 		ofs.close();
-		lossTimeLogProbe.clear();
 
 		ofs.open(ss.str()+"prob_probe.txt",iomode);
 		for(i=0;i<lossProbabilityLogProbe.size();i++){
 			ofs << (loggingOffset+i)*loggingUnit*dt << " " <<  lossProbabilityLogProbe[i]/dt/lossProbe << endl;
 		}
+		if(ofs.bad()){cout << "bad alloc " << endl;}
 		ofs.close();
+
+		lossTimeLogProbe.clear();
 		lossProbabilityLogProbe.clear();
 	}
 
@@ -131,6 +139,7 @@ void Simulator::loggingSave(){
 		for(i=0;i<lossTimeLogControl.size();i++){
 			ofs << lossTimeLogControl[i] << endl;
 		}
+		if(ofs.bad()){cout << "bad alloc " << endl;}
 		ofs.close();
 		lossTimeLogControl.clear();
 
@@ -138,11 +147,13 @@ void Simulator::loggingSave(){
 		for(i=0;i<lossProbabilityLogControl.size();i++){
 			ofs << (loggingOffset+i)*loggingUnit*dt << " " <<  lossProbabilityLogControl[i]/dt/lossControl << endl;
 		}
+		if(ofs.bad()){cout << "bad alloc " << endl;}
 		ofs.close();
 		lossProbabilityLogControl.clear();
 	}
 
 	loggingOffset +=newOffset;
+
 }
 
 //確保したオブジェクトを解放
