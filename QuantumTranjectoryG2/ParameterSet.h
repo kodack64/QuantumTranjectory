@@ -113,13 +113,15 @@ public:
 		}
 		param[str]=val;
 	}
-	virtual void outputAllParameter(ostream &out){
-		out << "#   **********" << endl;
+	virtual string toString(){
+		stringstream ss;
+		ss << "#   **********" << endl;
 		auto ite = param.begin();
 		while(ite!=param.end()){
-			out << "#   " << ite->first << " = " << ite->second << endl;
+			ss << "#   " << ite->first << " = " << ite->second << endl;
 			ite++;
 		}
-		out << "#   **********" << endl;
+		ss << "#   **********" << endl;
+		return ss.str();
 	}
 };
