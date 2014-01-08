@@ -11,12 +11,12 @@ useLossAtom true
 postselProbe false
 postselControl true
 postselAtom true
-forceLossProbeTime -1
+forceLossProbeTime 20000
 
 usePulse true
 
 dt 1e-2
-maxstep 100000000
+maxstep 40000
 
 loggingUnit 1
 

@@ -45,7 +45,7 @@ void CommandSetDifParameter::execute(ParameterSet* par,queue<Command*>& coms){
 
 // 設定値の表示
 void CommandDescParameter::execute(ParameterSet* par,queue<Command*>& coms){
-	par->outputAllParameter(cout);
+	cout << par->toString();
 }
 
 // パラメータファイルのロード
@@ -94,10 +94,10 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 	// 実行時のパラメータをログに保存
 	ofstream ofs;
 	stringstream ss;
-	ss << "log_" << i_unit << "_parameter.txt" << endl;
+	ss << "data\\log_" << i_unit << "_parameter.txt";
 	ofs.open(ss.str(),ios::out);
 	if(!ofs.bad()){
-		par->outputAllParameter(ofs);
+		ofs << par->toString();
 		ofs.close();
 	}
 
@@ -145,30 +145,94 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 #endif
 }
 
-// データから相関の計算
+// 相関の計算
 void CommandCalcG2::execute(ParameterSet* par,queue<Command*>& coms){
 	int i_unit;
 	try{
 		i_unit = boost::lexical_cast<int>(par->getParamInt("unit",0));
-		par->setParam("unit",boost::lexical_cast<string>(i_unit+1));
+//		par->setParam("unit",boost::lexical_cast<string>(i_unit+1));
 	}catch(boost::bad_lexical_cast e){
 		i_unit=1;
 	}
 
 	ofstream ofs;
 	stringstream ss;
-	ss << "log_" << i_unit << "_parameter.txt" << endl;
+	ss << "data\\log_" << i_unit << "_parameter.txt";
 	ofs.open(ss.str(),ios::out);
 	if(!ofs.bad()){
-		par->outputAllParameter(ofs);
+		ofs << par->toString();
 		ofs.close();
 	}
+
+	par->setParam("postselProbe","true");
+	par->setParam("postselControl","true");
+	par->setParam("postselAtom","true");
+	par->setParam("loggingTime","false");
+	par->setParam("loggingProb","true");
+	par->setParam("loggingJump","false");
+
+	int jumpStep = par->getParamInt("forceLossProbeTime",-1);
+	double logDiv = par->getParamDouble("dt",0) * par->getParamInt("loggingUnit",1);
+
+	if(jumpStep<=0){
+		cout << "!!!jump step is undefined or disabled" << endl;
+		return;
+	}
+
 	cout << "#  start simulator " << endl;
 	Simulator* sim = new Simulator();
+
+	cout << "#  jump try" << endl;
+	sim->execute(i_unit,1,par);
+
 	cout << "#  base try" << endl;
+	par->setParam("forceLossProbeTime","-1");
 	sim->execute(i_unit,0,par);
-	delete sim;
+	par->setParam("forceLossProbeTime",boost::lexical_cast<string>(jumpStep));
+
+	stringstream ss1,ss2,ss3;
+	ss1 << "data\\log_" << i_unit << "_" << 0 << "_prob_atom.txt";
+	ss2 << "data\\log_" << i_unit << "_" << 1 << "_prob_atom.txt";
+	ss3 << "data\\log_" << i_unit << "_d_prob_atom.txt";
+	calcG2(ss1.str(),ss2.str(),ss3.str(),jumpStep,logDiv);
+	ss1.str("");ss2.str("");ss3.str("");
+	ss1 << "data\\log_" << i_unit << "_" << 0 << "_prob_probe.txt";
+	ss2 << "data\\log_" << i_unit << "_" << 1 << "_prob_probe.txt";
+	ss3 << "data\\log_" << i_unit << "_d_prob_probe.txt";
+	calcG2(ss1.str(),ss2.str(),ss3.str(),jumpStep,logDiv);
+	ss1.str("");ss2.str("");ss3.str("");
+	ss1 << "data\\log_" << i_unit << "_" << 0 << "_prob_control.txt";
+	ss2 << "data\\log_" << i_unit << "_" << 1 << "_prob_control.txt";
+	ss3 << "data\\log_" << i_unit << "_d_prob_control.txt";
+	calcG2(ss1.str(),ss2.str(),ss3.str(),jumpStep,logDiv);
+
 	cout << "# finish" << endl;
+	delete sim;
+}
+void CommandCalcG2::calcG2(string base,string jump,string out,int jumpStep , double logDiv){
+	ifstream ibase,ijump;
+	ofstream og2;
+	vector<double> pbase;
+	vector<double> pjump;
+	double div=0;
+	ibase.open(base);
+	ijump.open(jump);
+	while(ibase){
+		double time,val;
+		ibase >> time >> val;
+		if(time!=0 && div==0)div=time;
+		pbase.push_back(val);
+	}
+	while(ijump){
+		double time,val;
+		ijump >> time >> val;
+		pjump.push_back(val);
+	}
+	og2.open(out,ios::out);
+	for(unsigned int s=jumpStep+1 ; s<pbase.size() && s<pjump.size();s++){
+		og2 << (s-jumpStep)*logDiv << " " << pjump[s]/pbase[s] << endl;
+	}
+	og2.close();
 }
 
 // コマンドファイルのロード

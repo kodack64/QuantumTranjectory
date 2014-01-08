@@ -27,7 +27,6 @@ void Simulator::checkCondition(){
 
 	//キーボードが押された場合、途中で中断したり中間状態を出力したりする
 #ifdef _MSC_VER
-#ifndef _OPENMP
 	if(_kbhit()){
 		char c = _getch();
 		if(c==VK_ESCAPE){
@@ -51,7 +50,6 @@ void Simulator::checkCondition(){
 			isLogged=true;
 		}
 	}
-#endif
 #endif
 
 	if(!isLogged && flagLossProbe && loggingJump){
@@ -91,7 +89,7 @@ void Simulator::loggingSave(){
 	unsigned int i;
 
 	// 原子のロスを出力
-	if(useLossAtom && !postselAtom){
+	if(useLossAtom){
 
 		if(loggingTime){
 			ofs.open(ss.str()+"time_atom.txt",iomode);
@@ -116,7 +114,7 @@ void Simulator::loggingSave(){
 	}
 
 	// probeのロスを出力
-	if(useLossProbe && !postselProbe){
+	if(useLossProbe){
 
 		if(loggingTime){
 			ofs.open(ss.str()+"time_probe.txt",iomode);
@@ -141,7 +139,7 @@ void Simulator::loggingSave(){
 	}
 
 	// controlのロスを出力
-	if(useLossControl && !postselControl){
+	if(useLossControl){
 		if(loggingTime){
 			ofs.open(ss.str()+"time_control.txt",iomode);
 			for(i=0;i<lossTimeLogControl.size();i++){
