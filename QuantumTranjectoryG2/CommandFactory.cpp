@@ -55,10 +55,10 @@ void CommandFactory::setCommandFunc(){
 		}
 	}));
 	funcmap.insert(make_pair("histgram",[](vector<string> words){
-		if(words.size()==2){
-			return (Command*)(new CommandCalcHistgram(words.at(1)));
+		if(words.size()==4){
+			return (Command*)(new CommandCalcHistgram(words.at(1),words.at(2),words.at(3)));
 		}else{
-			cout << "# format : histgram <log unit number>" << endl;
+			cout << "# format : histgram <log unit number> <histgram delta time> <photon dist sigma>" << endl;
 			return (Command*)NULL;
 		}
 	}));

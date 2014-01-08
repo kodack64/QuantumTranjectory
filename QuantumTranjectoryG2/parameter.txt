@@ -1,7 +1,7 @@
-maxPG 8
-maxAE 6
-maxPF 6
-maxAF 6
+maxPG 12
+maxAE 1
+maxPF 1
+maxAF 1
 totAtom 1000
 
 useLossProbe true
@@ -20,11 +20,11 @@ maxstep 40000
 
 loggingUnit 1
 
-pulsePump 1.5e-1
+pulsePump 1.0e-1
 pulseDetune 0e0
 pulseWidth 1e2
 
-coherenceProbe 1e-1
+coherenceProbe 0e-1
 coherenceControl 1e-0
 
 lossProbe 1e0

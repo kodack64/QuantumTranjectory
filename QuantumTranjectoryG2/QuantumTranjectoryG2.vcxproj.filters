@@ -27,9 +27,6 @@
     <ClCompile Include="CommandFactory.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Command.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Simulator.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -40,6 +37,15 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="SimulatorFinalize.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandExecute.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandParameter.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="CommandAnalyze.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

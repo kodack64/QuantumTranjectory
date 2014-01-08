@@ -83,9 +83,14 @@ public:
 class CommandCalcHistgram : public Command{
 private:
 	string unit;
+	string name;
+	string sdt;
+	string ssig;
 public:
-	CommandCalcHistgram(string _unit)
+	CommandCalcHistgram(string _unit , string _dt,string _sig)
 	:unit(_unit)
+	,sdt(_dt)
+	,ssig(_sig)
 	{}
 	virtual void execute(ParameterSet*,queue<Command*>&) override;
 };

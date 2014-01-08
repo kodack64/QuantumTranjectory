@@ -91,7 +91,7 @@ void Simulator::loggingSave(){
 	// 原子のロスを出力
 	if(useLossAtom){
 
-		if(loggingTime){
+		if(loggingTime && !postselAtom){
 			ofs.open(ss.str()+"time_atom.txt",iomode);
 			for(i=0;i<lossTimeLogAtom.size();i++){
 				ofs << lossTimeLogAtom[i] << endl;
@@ -116,7 +116,7 @@ void Simulator::loggingSave(){
 	// probeのロスを出力
 	if(useLossProbe){
 
-		if(loggingTime){
+		if(loggingTime && !postselProbe){
 			ofs.open(ss.str()+"time_probe.txt",iomode);
 			for(i=0;i<lossTimeLogProbe.size();i++){
 				ofs << lossTimeLogProbe[i] << endl;
@@ -140,7 +140,7 @@ void Simulator::loggingSave(){
 
 	// controlのロスを出力
 	if(useLossControl){
-		if(loggingTime){
+		if(loggingTime && !postselControl){
 			ofs.open(ss.str()+"time_control.txt",iomode);
 			for(i=0;i<lossTimeLogControl.size();i++){
 				ofs << lossTimeLogControl[i] << endl;

@@ -8,3 +8,4 @@ _base/
 *.pdb
 *.sdf
 *.suo
+log_*.txt
