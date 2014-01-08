@@ -8,21 +8,21 @@ useLossProbe true
 useLossControl true
 useLossAtom true
 
-postselProbe true
+postselProbe false
 postselControl true
 postselAtom true
 forceLossProbeTime -1
 
-usePulse false
+usePulse true
 
 dt 1e-2
 maxstep 100000000
 
 loggingUnit 1
 
-pulsePump 1e-2
-pulseDetune 1e-1
-pulseWidth 0e0
+pulsePump 1.5e-1
+pulseDetune 0e0
+pulseWidth 1e2
 
 coherenceProbe 1e-1
 coherenceControl 1e-0
