@@ -102,14 +102,27 @@ void Simulator::calcProjection(){
 	for(i=0;i<vecSize;i++)dif[i]=0;
 
 	// 原子の自然放出が起きた場合の計算
-	// todo eからaとfにランダムに落ちるようにする
 	if(flagLossAtom){
-		for(i=0;i<vecSize;i++){
-			ae = getIdToAE(i);
-			if(ae<maxAE){
-				state[i]=state[i+indAE]*sqrt(ae+1);
-			}else{
-				state[i]=0;
+		if(r->next()<0.5){
+			// eからg
+			for(i=0;i<vecSize;i++){
+				ae = getIdToAE(i);
+				if(ae<maxAE){
+					state[i]=state[i+indAE]*sqrt(ae+1);
+				}else{
+					state[i]=0;
+				}
+			}
+		}else{
+			// eからf
+			for(i=0;i<vecSize;i++){
+				ae = getIdToAE(i);
+				af = getIdToAF(i);
+				if(ae<maxAE && af>0){
+					state[i]=state[i+indAE-indAF]*sqrt(ae+1)*sqrt(af);
+				}else{
+					state[i]=0;
+				}
 			}
 		}
 	}
