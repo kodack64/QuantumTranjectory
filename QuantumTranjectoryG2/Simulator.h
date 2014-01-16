@@ -129,6 +129,12 @@ private:
 	vector<double> lossProbabilityLogAtom;
 	vector<double> lossProbabilityLogControl;
 	vector<double> lossProbabilityLogProbe;
+	vector<double> g2ValueLogProbe;
+	vector<double> g2ValueLogControl;
+	vector<double> g2ValueLogAtom;
+	double g2Probe;
+	double g2Control;
+	double g2Atom;
 	int loggingOffset;
 
 	// idÇêUÇÈÇΩÇﬂÇÃêî

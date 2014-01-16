@@ -80,6 +80,9 @@ void Simulator::initParameter(){
 	lossProbabilityLogAtom.clear();
 	lossProbabilityLogControl.clear();
 	lossProbabilityLogProbe.clear();
+	g2ValueLogAtom.clear();
+	g2ValueLogControl.clear();
+	g2ValueLogProbe.clear();
 	endFlag=false;
 	loggingOffset=0;
 	trace=0;

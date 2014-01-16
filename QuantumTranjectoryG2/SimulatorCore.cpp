@@ -173,10 +173,15 @@ void Simulator::calcProjection(){
 		}
 		trace+=norm(state[i]);
 		energy+=norm(state[i])*(ae+pg+pf);
-		if(ae==maxAE)edgeAE+=norm(state[i]);
 	}
 
 	//ê≥ãKâª
+	double g2atoma=0;
+	double g2probea=0;
+	double g2controla=0;
+	g2Probe=g2Atom=g2Control=0;
+	double enepf[20];
+	for(int i=0;i<20;i++)enepf[i]=0;
 	trace=sqrt(trace);
 	for(i=0;i<vecSize;i++){
 		state[i]/=trace;
@@ -185,11 +190,26 @@ void Simulator::calcProjection(){
 		pg = getIdToPG(i);
 		pf = getIdToPF(i);
 		af = getIdToAF(i);
-		if(ae==maxAE)edgeAE+=norm(state[i]);
-		if(af==maxAF)edgeAF+=norm(state[i]);
-		if(pg==maxPG)edgePG+=norm(state[i]);
-		if(pf==maxPF)edgePF+=norm(state[i]);
-		if(ae==maxAE || af==maxAF || pg==maxPG || pf==maxPF) edgeAll += norm(state[i]);
+		g2Atom += ae*(ae-1)*norm(state[i]);
+		g2Control += pf*(pf-1)*norm(state[i]);
+		g2Probe += pg*(pg-1)*norm(state[i]);
+		g2atoma+=ae*norm(state[i]);
+		g2controla+=pf*norm(state[i]);
+		g2probea+=pg*norm(state[i]);
+		enepf[pf]+=norm(state[i]);
+		if(ae==maxAE)edgeAE+=norm(state[i])*ae;
+		if(af==maxAF)edgeAF+=norm(state[i])*af;
+		if(pg==maxPG)edgePG+=norm(state[i])*pg;
+		if(pf==maxPF)edgePF+=norm(state[i])*pf;
+		if(ae==maxAE || af==maxAF || pg==maxPG || pf==maxPF) edgeAll += norm(state[i])*(ae+af+pg+pf);
+	}
+	g2Atom/=pow(g2atoma,2);
+	g2Control/=pow(g2controla,2);
+	g2Probe/=pow(g2probea,2);
+	if(step%1000 == 0){
+		for(int i=0;i<10;i++){
+			cout << i << ":" << enepf[i] << endl;
+		}
 	}
 
 	if(flagLossProbe){

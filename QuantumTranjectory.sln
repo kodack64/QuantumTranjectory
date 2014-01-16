@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuantumTranjectoryParallelD
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuantumTranjectoryG2", "QuantumTranjectoryG2\QuantumTranjectoryG2.vcxproj", "{4E3641DD-DE7E-43EF-A6AF-BE33BEC68818}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TimeToG2", "TimeToG2\TimeToG2.vcxproj", "{82B2A527-0036-4972-B156-89026A7B834A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,16 @@ Global
 		{4E3641DD-DE7E-43EF-A6AF-BE33BEC68818}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{4E3641DD-DE7E-43EF-A6AF-BE33BEC68818}.Release|Win32.ActiveCfg = Release|Win32
 		{4E3641DD-DE7E-43EF-A6AF-BE33BEC68818}.Release|Win32.Build.0 = Release|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Debug|Win32.Build.0 = Debug|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Release|Any CPU.ActiveCfg = Release|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Release|Win32.ActiveCfg = Release|Win32
+		{82B2A527-0036-4972-B156-89026A7B834A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -73,6 +73,9 @@ void Simulator::logging(){
 			lossProbabilityLogAtom.push_back(probLossAtom);
 			lossProbabilityLogProbe.push_back(probLossProbe);
 			lossProbabilityLogControl.push_back(probLossControl);
+			g2ValueLogAtom.push_back(g2Atom);
+			g2ValueLogProbe.push_back(g2Probe);
+			g2ValueLogControl.push_back(g2Control);
 		}
 	}
 }
@@ -107,10 +110,18 @@ void Simulator::loggingSave(){
 			}
 			if(ofs.bad()){cout << "bad alloc " << endl;}
 			ofs.close();
+
+			ofs.open(ss.str()+"g2_atom.txt",iomode);
+			for(i=0;i<g2ValueLogAtom.size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " " << g2ValueLogAtom[i] << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
 		}
 
 		lossTimeLogAtom.clear();
 		lossProbabilityLogAtom.clear();
+		g2ValueLogAtom.clear();
 	}
 
 	// probeのロスを出力
@@ -132,10 +143,18 @@ void Simulator::loggingSave(){
 			}
 			if(ofs.bad()){cout << "bad alloc " << endl;}
 			ofs.close();
+
+			ofs.open(ss.str()+"g2_probe.txt",iomode);
+			for(i=0;i<g2ValueLogProbe.size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " " << g2ValueLogProbe[i] << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
 		}
 
 		lossTimeLogProbe.clear();
 		lossProbabilityLogProbe.clear();
+		g2ValueLogProbe.clear();
 	}
 
 	// controlのロスを出力
@@ -156,10 +175,18 @@ void Simulator::loggingSave(){
 			}
 			if(ofs.bad()){cout << "bad alloc " << endl;}
 			ofs.close();
+
+			ofs.open(ss.str()+"g2_control.txt",iomode);
+			for(i=0;i<g2ValueLogControl.size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " " << g2ValueLogControl[i] << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
 		}
 
 		lossTimeLogControl.clear();
 		lossProbabilityLogControl.clear();
+		g2ValueLogControl.clear();
 	}
 
 	loggingOffset +=newOffset;

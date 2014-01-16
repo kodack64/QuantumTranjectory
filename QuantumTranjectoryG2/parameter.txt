@@ -1,30 +1,30 @@
-maxPG 12
-maxAE 1
-maxPF 1
-maxAF 1
+maxPG 8
+maxAE 8
+maxPF 8
+maxAF 8
 totAtom 1000
 
 useLossProbe true
 useLossControl true
 useLossAtom true
 
-postselProbe false
+postselProbe true
 postselControl true
 postselAtom true
-forceLossProbeTime 20000
+forceLossProbeTime -1
 
 usePulse true
 
 dt 1e-2
-maxstep 40000
+maxstep 40000000
 
 loggingUnit 1
 
-pulsePump 1.0e-1
+pulsePump 1.5e-1
 pulseDetune 0e0
 pulseWidth 1e2
 
-coherenceProbe 0e-1
+coherenceProbe 1e-1
 coherenceControl 1e-0
 
 lossProbe 1e0
