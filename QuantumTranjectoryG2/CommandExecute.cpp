@@ -50,12 +50,20 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 	// 並列計算時はスレッドを分割し計算
 #ifdef _OPENMP
 	int count=0;
+	int totLossPG=0;
+	int totLossPF=0;
+	int totLossAE=0;
+	double totMaxEdge=0;
 	cout << "# start simulator " << endl;
 	omp_set_num_threads(core);
 #pragma omp parallel
 	{
 		int mycore = omp_get_thread_num();
 		int myid;
+		int lossPG=0;
+		int lossPF=0;
+		int lossAE=0;
+		double maxEdge=0;
 		Simulator* sim = new Simulator();
 		while(true){
 #pragma omp critical
@@ -63,13 +71,22 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 				if(count<i_repeatNum){
 					myid = count;
 					count++;
-					cout << " #" << mycore << " start " << myid << endl;
+					cout << " #" << mycore << " start " << myid  << " / " << i_repeatNum << " try ave(pg,pf,ae)=" << totLossPG*1.0/count << "," << totLossPF*1.0/count << "," <<totLossAE*1.0/count << " edge=" << totMaxEdge << endl;
+					totLossPG+=lossPG;
+					totLossPF+=lossPF;
+					totLossAE+=lossAE;
+					if(totMaxEdge<maxEdge)totMaxEdge=maxEdge;
 				}else{
 					myid=-1;
 				}
 			}
 			if(myid==-1)break;
 			sim->execute(i_unit,myid,par);
+			lossPG = sim->getTotalProbeLossCount();
+			lossPF = sim->getTotalControlLossCount();
+			lossAE = sim->getTotalAtomLossCount();
+			maxEdge = sim->getMaxEdge();
+			cout << " #" << mycore << " result * pg" << lossPG << " pf" << lossPF << " ae" << lossAE << " edge" << maxEdge <<  endl;
 		}
 #pragma omp critical
 		cout << " #" << mycore << "end" << endl;
@@ -84,6 +101,7 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 	for(int i=0;i<i_repeatNum;i++){
 		cout << ">> " << i << " / " << i_repeatNum << " try" << endl;
 		sim->execute(i_unit,i,par);
+		cout << " #" << mycore << " result * " << lastCount << endl;
 	}
 	delete sim;
 	cout << "# finish" << endl;

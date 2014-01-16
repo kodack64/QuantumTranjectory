@@ -92,6 +92,10 @@ void Simulator::initParameter(){
 	edgeAE=0;
 	edgeAF=0;
 	edgeAll=0;
+	totProbeLoss=0;
+	totControlLoss=0;
+	totAtomLoss=0;
+	maxEdge=0;
 
 	// ƒƒ‚ƒŠ—Ìˆæ‚ÌŠm•Û
 //	r=new Random(seed);

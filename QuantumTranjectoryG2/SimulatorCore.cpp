@@ -13,7 +13,8 @@ void Simulator::calcPulseSize(){
 	// usePulse=trueならパルスの形状が三角関数になるように変形
 	if(usePulse){
 		if(dt*step<pulseWidth){
-			pulse*=(-cos(dt*step/pulseWidth*acos(0)*4)+1)/2;
+//			pulse*=(-cos(dt*step/pulseWidth*acos(0)*4)+1)/2;
+			pulse*=sqrt((-cos(dt*step/pulseWidth*acos(0)*4)+1)/2);
 		}else{
 			pulse=0;
 		}
@@ -103,6 +104,7 @@ void Simulator::calcProjection(){
 
 	// 原子の自然放出が起きた場合の計算
 	if(flagLossAtom){
+		totAtomLoss++;
 		if(r->next()<0.5){
 			// eからg
 			for(i=0;i<vecSize;i++){
@@ -128,6 +130,7 @@ void Simulator::calcProjection(){
 	}
 	//probeの共振器から光子が抜けた場合
 	if(flagLossProbe){
+		totProbeLoss++;
 		for(i=0;i<vecSize;i++){
 			pg = getIdToPG(i);
 			if(pg<maxPG){
@@ -139,6 +142,7 @@ void Simulator::calcProjection(){
 	}
 	//controlの共振器から光子が抜けた場合
 	if(flagLossControl){
+		totControlLoss++;
 		for(i=0;i<vecSize;i++){
 			pf = getIdToPF(i);
 			if(pf<maxPF){
@@ -181,7 +185,7 @@ void Simulator::calcProjection(){
 	double g2controla=0;
 	g2Probe=g2Atom=g2Control=0;
 	double enepf[20];
-	for(int i=0;i<20;i++)enepf[i]=0;
+	for(i=0;i<20;i++)enepf[i]=0;
 	trace=sqrt(trace);
 	for(i=0;i<vecSize;i++){
 		state[i]/=trace;
@@ -203,14 +207,16 @@ void Simulator::calcProjection(){
 		if(pf==maxPF)edgePF+=norm(state[i])*pf;
 		if(ae==maxAE || af==maxAF || pg==maxPG || pf==maxPF) edgeAll += norm(state[i])*(ae+af+pg+pf);
 	}
+	if(edgeAll>maxEdge)maxEdge=edgeAll;
 	g2Atom/=pow(g2atoma,2);
 	g2Control/=pow(g2controla,2);
 	g2Probe/=pow(g2probea,2);
-	if(step%1000 == 0){
+
+/*	if(step%1000 == 0){
 		for(int i=0;i<10;i++){
 			cout << i << ":" << enepf[i] << endl;
 		}
-	}
+	}*/
 
 	if(flagLossProbe){
 		if(forceLossProbeTime==step){

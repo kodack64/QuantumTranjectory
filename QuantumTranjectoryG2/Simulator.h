@@ -132,6 +132,10 @@ private:
 	vector<double> g2ValueLogProbe;
 	vector<double> g2ValueLogControl;
 	vector<double> g2ValueLogAtom;
+	int totProbeLoss;
+	int totControlLoss;
+	int totAtomLoss;
+	double maxEdge;
 	double g2Probe;
 	double g2Control;
 	double g2Atom;
@@ -158,4 +162,8 @@ private:
 
 public:
 	virtual void execute(int unit,int id,ParameterSet* param);
+	virtual int getTotalProbeLossCount(){return totProbeLoss;}
+	virtual int getTotalControlLossCount(){return totControlLoss;}
+	virtual int getTotalAtomLossCount(){return totAtomLoss;}
+	virtual double getMaxEdge(){return maxEdge;}
 };
