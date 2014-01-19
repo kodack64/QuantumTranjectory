@@ -23,7 +23,7 @@ void Simulator::checkCondition(){
 	//ステップ数の終了チェック
 	if(step>maxstep)endFlag=true;
 	//パルスを入射した場合、パルスが入りきった後にシステム内のエネルギーが一定以下になったら終了
-	if(usePulse && energy<eps && dt*step>pulseWidth)endFlag=true;
+	if(usePulse && energy<eps && dt*step>pulseWidth*pulseCut)endFlag=true;
 
 	//キーボードが押された場合、途中で中断したり中間状態を出力したりする
 #ifdef _MSC_VER

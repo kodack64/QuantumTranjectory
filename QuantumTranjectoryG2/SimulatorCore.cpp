@@ -4,6 +4,7 @@
 
 
 #include <iostream>
+#include <fstream>
 #include <conio.h>
 
 // その時刻でのパルスの複素振幅を計算
@@ -12,12 +13,23 @@ void Simulator::calcPulseSize(){
 
 	// usePulse=trueならパルスの形状が三角関数になるように変形
 	if(usePulse){
+		double pos = dt*step-pulseWidth*pulseCut/2;
+//		if(dt*step<pulseWidth) pos = pulseWidth - pulseWidth*pulseCut/2;
+		double val = exp(-pos*pos/(2*pulseWidth*pulseWidth))/sqrt(2*3.14159)/pulseWidth;
+		pulse*=sqrt(val);
+
+//		ofstream ofs("pulse2.txt",ios::app);
+//		ofs << val << endl;
+//		ofs.close();
+
+/*
 		if(dt*step<pulseWidth){
 //			pulse*=(-cos(dt*step/pulseWidth*acos(0)*4)+1)/2;
 			pulse*=sqrt((-cos(dt*step/pulseWidth*acos(0)*4)+1)/2);
 		}else{
 			pulse=0;
 		}
+		*/
 	}
 }
 

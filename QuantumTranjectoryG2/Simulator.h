@@ -98,8 +98,10 @@ private:
 	double pulsePump;
 	//入力の離調
 	double pulseDetune;
-	//パルスの長さ
+	//パルスの線幅
 	double pulseWidth;
+	//パルスを打ち切る倍率
+	double pulseCut;
 
 	//相互作用の強さ
 	double coherenceProbe;

@@ -45,6 +45,7 @@ void Simulator::loadParameter(ParameterSet* par){
 	pulsePump = par->getParamDouble(_NAME(pulsePump),pulsePump);
 	pulseDetune = par->getParamDouble(_NAME(pulseDetune),pulseDetune);
 	pulseWidth = par->getParamDouble(_NAME(pulseWidth),pulseWidth);
+	pulseCut = par->getParamDouble(_NAME(pulseCut),pulseCut);
 
 	//	coherence
 	coherenceProbe = par->getParamDouble(_NAME(coherenceProbe),coherenceProbe);
