@@ -107,7 +107,7 @@ public:
 
 class CommandCalcG2 : public Command{
 private:
-	virtual void calcG2(string base,string jump,string out,int jumpStep,double logDiv);
+	virtual void calcG2(string base,string jump,string out,int jumpStep,double logDiv,int i_unit,string name);
 public:
 	CommandCalcG2()
 	{}

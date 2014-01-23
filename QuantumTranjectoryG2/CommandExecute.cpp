@@ -158,22 +158,22 @@ void CommandCalcG2::execute(ParameterSet* par,queue<Command*>& coms){
 	ss1 << "data\\log_" << i_unit << "_" << 0 << "_prob_atom.txt";
 	ss2 << "data\\log_" << i_unit << "_" << 1 << "_prob_atom.txt";
 	ss3 << "analyze\\log_" << i_unit << "_d_prob_atom.txt";
-	calcG2(ss1.str(),ss2.str(),ss3.str(),jumpStep,logDiv);
+	calcG2(ss1.str(),ss2.str(),ss3.str(),jumpStep,logDiv,i_unit,"atom");
 	ss1.str("");ss2.str("");ss3.str("");
 	ss1 << "data\\log_" << i_unit << "_" << 0 << "_prob_probe.txt";
 	ss2 << "data\\log_" << i_unit << "_" << 1 << "_prob_probe.txt";
 	ss3 << "analyze\\log_" << i_unit << "_d_prob_probe.txt";
-	calcG2(ss1.str(),ss2.str(),ss3.str(),jumpStep,logDiv);
+	calcG2(ss1.str(),ss2.str(),ss3.str(),jumpStep,logDiv,i_unit,"probe");
 	ss1.str("");ss2.str("");ss3.str("");
 	ss1 << "data\\log_" << i_unit << "_" << 0 << "_prob_control.txt";
 	ss2 << "data\\log_" << i_unit << "_" << 1 << "_prob_control.txt";
 	ss3 << "analyze\\log_" << i_unit << "_d_prob_control.txt";
-	calcG2(ss1.str(),ss2.str(),ss3.str(),jumpStep,logDiv);
+	calcG2(ss1.str(),ss2.str(),ss3.str(),jumpStep,logDiv,i_unit,"control");
 
 	cout << "# finish" << endl;
 	delete sim;
 }
-void CommandCalcG2::calcG2(string base,string jump,string out,int jumpStep , double logDiv){
+void CommandCalcG2::calcG2(string base,string jump,string out,int jumpStep , double logDiv,int i_unit,string name){
 	ifstream ibase,ijump;
 	ofstream og2;
 	vector<double> pbase;
@@ -193,8 +193,20 @@ void CommandCalcG2::calcG2(string base,string jump,string out,int jumpStep , dou
 		pjump.push_back(val);
 	}
 	og2.open(out,ios::out);
+	double tau=0;
+	double jumpval=0;
+
+	jumpval = pjump[jumpStep+1]/pbase[jumpStep+1];
 	for(unsigned int s=jumpStep+1 ; s<pbase.size() && s<pjump.size();s++){
 		og2 << (s-jumpStep)*logDiv << " " << pjump[s]/pbase[s] << endl;
+		if(tau==0 && abs(pjump[s]/pbase[s]-1)<abs(pjump[jumpStep+1]/pbase[jumpStep+1]-1)*0.5){
+			tau = (s-jumpStep)*logDiv;
+		}
 	}
 	og2.close();
+
+	ofstream ojump;
+	ojump.open("analyze\\log_g20_tau_"+name+".txt",ios::app);
+	ojump << i_unit << " " << jumpval << " " << tau << endl;
+	ojump.close();
 }
