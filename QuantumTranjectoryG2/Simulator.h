@@ -114,6 +114,7 @@ private:
 
 	//強制的にロスさせるタイミング
 	int forceLossProbeTime;
+	int forceLossProbeTimeSub;
 
 	// 終了条件
 	double eps;

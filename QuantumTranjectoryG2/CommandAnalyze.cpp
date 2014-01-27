@@ -81,7 +81,7 @@ void CommandCalcHistgram::execute(ParameterSet* par,queue<Command*>& coms){
 		normsum=0;
 		for(int j=0;j<wave.size();j++){
 			ofs << j*dt << " " << wave[j] << endl;
-			normsum += wave[j];
+			normsum += wave[j]*dt;
 		}
 		ofs.close();
 

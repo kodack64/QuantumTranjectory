@@ -57,6 +57,7 @@ public:
 		param["postselAtom"]="false";
 
 		param["forceLossProbeTime"]="-1";
+		param["forceLossProbeTimeSub"]="-1";
 
 		param["core"] = "8";
 		

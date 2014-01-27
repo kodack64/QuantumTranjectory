@@ -56,6 +56,7 @@ void Simulator::loadParameter(ParameterSet* par){
 	lossControl = par->getParamDouble(_NAME(lossControl),lossControl);
 	lossAtom = par->getParamDouble(_NAME(lossAtom),lossAtom);
 	forceLossProbeTime = par->getParamInt(_NAME(forceLossProbeTime),forceLossProbeTime);
+	forceLossProbeTimeSub = par->getParamInt(_NAME(forceLossProbeTimeSub),forceLossProbeTimeSub);
 
 	// end condition
 	eps = par->getParamDouble(_NAME(eps),eps);
