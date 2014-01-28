@@ -13,12 +13,12 @@ useLossAtom true
 postselProbe true
 postselControl true
 postselAtom true
-forceLossProbeTime -1
+forceLossProbeTime 100
 
 usePulse true
 
 dt 1e-2
-maxstep 40000000
+maxstep 200
 
 loggingUnit 1
 loggingTime true
@@ -28,7 +28,7 @@ loggingJump true
 pulsePump 1.5e-2
 pulseDetune 0e0
 pulseWidth 1e2
-pulseCut 12
+pulseCut 2
 
 coherenceProbe 1e-1
 coherenceControl 1e-0
