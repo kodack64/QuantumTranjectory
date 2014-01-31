@@ -199,6 +199,12 @@ void Simulator::calcProjection(){
 	double enepf[20];
 	for(i=0;i<20;i++)enepf[i]=0;
 	trace=sqrt(trace);
+
+	for(i=0;i<=maxEne;i++)energyValueLogAll[i].push_back(0);
+	for(i=0;i<=maxPG;i++)energyValueLogProbe[i].push_back(0);
+	for(i=0;i<=maxPF;i++)energyValueLogControl[i].push_back(0);
+	for(i=0;i<=maxAE;i++)energyValueLogAtom[i].push_back(0);
+
 	for(i=0;i<vecSize;i++){
 		state[i]/=trace;
 
@@ -212,7 +218,17 @@ void Simulator::calcProjection(){
 		g2atoma+=ae*norm(state[i]);
 		g2controla+=pf*norm(state[i]);
 		g2probea+=pg*norm(state[i]);
+
 		enepf[pf]+=norm(state[i]);
+		if(loggingProb){
+			if(step%loggingUnit==0){
+				energyValueLogAll[pg+ae+pf][energyValueLogAll[pg+ae+pf].size()-1] +=norm(state[i]);
+				energyValueLogProbe[pg][energyValueLogProbe[pg].size()-1] +=norm(state[i]);
+				energyValueLogControl[pf][energyValueLogControl[pf].size()-1] +=norm(state[i]);
+				energyValueLogAtom[ae][energyValueLogAtom[ae].size()-1] +=norm(state[i]);
+			}
+		}
+
 		if(ae==maxAE)edgeAE+=norm(state[i])*ae;
 		if(af==maxAF)edgeAF+=norm(state[i])*af;
 		if(pg==maxPG)edgePG+=norm(state[i])*pg;

@@ -135,6 +135,10 @@ private:
 	vector<double> g2ValueLogProbe;
 	vector<double> g2ValueLogControl;
 	vector<double> g2ValueLogAtom;
+	vector<vector<double>> energyValueLogProbe;
+	vector<vector<double>> energyValueLogControl;
+	vector<vector<double>> energyValueLogAll;
+	vector<vector<double>> energyValueLogAtom;
 	int totProbeLoss;
 	int totControlLoss;
 	int totAtomLoss;

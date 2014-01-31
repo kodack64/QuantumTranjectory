@@ -85,6 +85,10 @@ void Simulator::initParameter(){
 	g2ValueLogAtom.clear();
 	g2ValueLogControl.clear();
 	g2ValueLogProbe.clear();
+	energyValueLogAll.resize(maxEne+1);
+	energyValueLogProbe.resize(maxPG+1);
+	energyValueLogControl.resize(maxPF+1);
+	energyValueLogAtom.resize(maxAE+1);
 	endFlag=false;
 	loggingOffset=0;
 	trace=0;

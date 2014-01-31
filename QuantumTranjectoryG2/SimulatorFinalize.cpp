@@ -43,6 +43,26 @@ void Simulator::checkCondition(){
 			cout << "#  edgepf : " << edgePF << endl;
 			cout << "#  edgeaf : " << edgeAF << endl;
 			cout << "#  edgeall : " << edgeAll << endl;
+			cout << "#  AllEne ";
+			for(int i=0;i<min(maxEne,4);i++){
+				cout << energyValueLogAll[i][energyValueLogAll[i].size()-1] << " ";
+			}
+			cout << endl;
+			cout << "#  AllProbe ";
+			for(int i=0;i<min(maxPG,4);i++){
+				cout << energyValueLogProbe[i][energyValueLogProbe[i].size()-1] << " ";
+			}
+			cout << endl;
+			cout << "#  AllControl ";
+			for(int i=0;i<min(maxPF,4);i++){
+				cout << energyValueLogControl[i][energyValueLogControl[i].size()-1] << " ";
+			}
+			cout << endl;
+			cout << "#  AllAtom ";
+			for(int i=0;i<min(maxAE,4);i++){
+				cout << energyValueLogAtom[i][energyValueLogAtom[i].size()-1] << " ";
+			}
+			cout << endl;
 		}
 		if(c==VK_RETURN){
 			cout << "# log saved" << endl;
@@ -117,11 +137,22 @@ void Simulator::loggingSave(){
 			}
 			if(ofs.bad()){cout << "bad alloc " << endl;}
 			ofs.close();
+
+			ofs.open(ss.str()+"ene_atom.txt",iomode);
+			for(i=0;i<energyValueLogAtom[0].size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " ";
+				for(int j=0;j<maxAE;j++){
+					ofs << energyValueLogAtom[j][i] << " ";
+				}
+				ofs << endl;
+			}
+			ofs.close();
 		}
 
 		lossTimeLogAtom.clear();
 		lossProbabilityLogAtom.clear();
 		g2ValueLogAtom.clear();
+		for(int j=0;j<maxAE;j++)energyValueLogAtom[j].clear();
 	}
 
 	// probeのロスを出力
@@ -150,11 +181,36 @@ void Simulator::loggingSave(){
 			}
 			if(ofs.bad()){cout << "bad alloc " << endl;}
 			ofs.close();
+
+			ofs.open(ss.str()+"ene_probe.txt",iomode);
+			for(i=0;i<energyValueLogProbe[0].size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " ";
+				for(int j=0;j<maxPG;j++){
+ 					ofs << energyValueLogProbe[j][i] << " ";
+				}
+				ofs << endl;
+			}
+			ofs.close();
+
+			ofs.open(ss.str()+"ene_all.txt",iomode);
+			for(i=0;i<energyValueLogAll[0].size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " ";
+				for(int j=0;j<maxEne;j++){
+					ofs << energyValueLogAll[j][i] << " ";
+				}
+				ofs << endl;
+			}
+			ofs.close();
+
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
 		}
 
 		lossTimeLogProbe.clear();
 		lossProbabilityLogProbe.clear();
 		g2ValueLogProbe.clear();
+		for(int j=0;j<maxPG;j++)energyValueLogProbe[j].clear();
+		for(int j=0;j<maxEne;j++)energyValueLogAll[j].clear();
 	}
 
 	// controlのロスを出力
@@ -182,11 +238,22 @@ void Simulator::loggingSave(){
 			}
 			if(ofs.bad()){cout << "bad alloc " << endl;}
 			ofs.close();
+
+			ofs.open(ss.str()+"ene_control.txt",iomode);
+			for(i=0;i<energyValueLogControl[0].size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " ";
+				for(int j=0;j<maxPF;j++){
+					ofs << energyValueLogControl[j][i] << " ";
+				}
+				ofs << endl;
+			}
+			ofs.close();
 		}
 
 		lossTimeLogControl.clear();
 		lossProbabilityLogControl.clear();
 		g2ValueLogControl.clear();
+		for(int j=0;j<maxPF;j++)energyValueLogControl[j].clear();
 	}
 
 	loggingOffset +=newOffset;
