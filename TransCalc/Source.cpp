@@ -63,6 +63,10 @@ double TR1(){
 	double np1 = calcNp(1);
 	double nc1 = 1-np1;
 	return trans(np1,nc1);
+	double tr = trans(0,0);
+	double npd1 = np1*tr*tr;
+	double ncd1 = nc1*tr*tr;
+	return trans(npd1,ncd1);
 }
 double TR2(){
 	double np2 = calcNp(2);
@@ -84,8 +88,8 @@ int main(){
 	ofs.close();
 
 	ofs.open("g2t.txt",ios::out);
-	for(gp=0.1;gp<10;gp+=0.1){
-		for(gc=0.1;gc<2.0;gc+=0.1){
+	for(gp=0.001;gp<10;gp+=0.1){
+		for(gc=0.001;gc<2.0;gc+=0.1){
 //			ofs << trans(calcNp(1),2-calcNp(1)) << " ";
 //			ofs << TR0() << " ";
 			ofs << pow(TR1()/TR0(),2) << " ";
@@ -93,31 +97,38 @@ int main(){
 		ofs << endl;
 	}
 	ofs.close();
+
+	kp=1;
+	kc=0.03;
 	gc=1.0;
 	ofs.open("rel1.txt",ios::out);
 	for(gp=0.01*sqrt(1000);gp<0.15*sqrt(1000);gp+=0.001){
-		ofs << gp/sqrt(1000) << " " << pow(TR1()/TR0(),2) << endl;
+//		ofs << gp/sqrt(1000) << " " << pow(TR1()/TR0(),4) << endl;
+		ofs << gp/sqrt(1000) << " " << pow(TR0(),2) << endl;
 	}
 	ofs.close();
 
 	gp=0.1*sqrt(1000);
 	ofs.open("rel2.txt",ios::out);
 	for(gc=0.01;gc<2.0;gc+=0.001){
-		ofs << gc << " " << pow(TR1()/TR0(),2) << endl;
+//		ofs << gc << " " << pow(TR1()/TR0(),4) << endl;
+		ofs << gc << " " << pow(TR0(),2) << endl;
 	}
 	ofs.close();
 
 	gc=1.0;
 	ofs.open("rel3.txt",ios::out);
 	for(kp=0.2;kp<1.8;kp+=0.001){
-		ofs << kp << " " << pow(TR1()/TR0(),2) << endl;
+//		ofs << kp << " " << pow(TR1()/TR0(),4) << endl;
+		ofs << kp << " " << pow(TR0(),2) << endl;
 	}
 	ofs.close();
 
 	kp=1.0;
 	ofs.open("rel4.txt",ios::out);
 	for(kc=0.01;kc<0.1;kc+=0.001){
-		ofs << kc << " " << pow(TR1()/TR0(),2) << endl;
+//		ofs << kc << " " << pow(TR1()/TR0(),4) << endl;
+		ofs << kc << " " << pow(TR0(),2) << endl;
 	}
 	ofs.close();
 
