@@ -139,9 +139,9 @@ public:
 int main(){
 	int n=10;
 	double eps=1e-5;
-	double k1=1;
-	double k2=0.03;
-	double r=3;
+	double k1=1.0/2;
+	double k2=0.03/2;
+	double r=6.0/2;
 	double gp=0.1;
 	double gc=1;
 	int N=1000;
@@ -155,20 +155,40 @@ int main(){
 	cd->gc=gc;
 
 
-	fstream fout("out.txt",ios::out);
-	for(int i=0;i<200;i++){
-		cd->gp=i*0.01*sqrt(1000);
-//		cd->gc=i*0.01;
-//		cd->k1=i*0.01;
-//		cd->k2=i*0.01;
+	fstream fout;
+	fout.open("gpout.txt",ios::out);
+	for(int i=0;i<1000;i++){
+		cd->gp=i*0.001*sqrt(1000);
 		cd->init();
 		cd->compute();
-//		cd->consoleOut();
-		cout << i*0.01 << " " << cd->g2p << " " << cd->coherence << endl;
+		fout << i*0.001 << " " << cd->g2p << " " << cd->coherence << endl;
+	}
+	fout.close();cd->gp=gp*sqrt(N);
+	fout.open("gcout.txt",ios::out);
+	for(int i=0;i<1000;i++){
+		cd->gc=i*0.01;
+		cd->init();
+		cd->compute();
 		fout << i*0.01 << " " << cd->g2p << " " << cd->coherence << endl;
 	}
+	fout.close();cd->gc=gc;
+	fout.open("kpout.txt",ios::out);
+	for(int i=0;i<1000;i++){
+		cd->k1=i*0.01/2;
+		cd->init();
+		cd->compute();
+		fout << i*0.01 << " " << cd->g2p << " " << cd->coherence << endl;
+	}
+	fout.close();cd->k1=k1;
+	fout.open("kcout.txt",ios::out);
+	for(int i=0;i<1000;i++){
+		cd->k2=i*0.01/2;
+		cd->init();
+		cd->compute();
+		fout << i*0.01 << " " << cd->g2p << " " << cd->coherence << endl;
+	}
+	fout.close();
 
 	delete cd;
-
 	return 0;
 }
