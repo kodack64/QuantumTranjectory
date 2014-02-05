@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileProd", "FileProd\FilePr
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransCalc", "TransCalc\TransCalc.vcxproj", "{C37114D1-654F-45A8-B045-30789E3FB5F6}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EigenCalc", "EigenCalc\EigenCalc.vcxproj", "{1EF8864C-E60B-4688-BF13-FF4E34516CAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -167,6 +169,16 @@ Global
 		{C37114D1-654F-45A8-B045-30789E3FB5F6}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{C37114D1-654F-45A8-B045-30789E3FB5F6}.Release|Win32.ActiveCfg = Release|Win32
 		{C37114D1-654F-45A8-B045-30789E3FB5F6}.Release|Win32.Build.0 = Release|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Debug|Win32.Build.0 = Debug|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Release|Any CPU.ActiveCfg = Release|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Release|Win32.ActiveCfg = Release|Win32
+		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

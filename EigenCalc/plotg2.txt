@@ -1,0 +1,14 @@
+
+set terminal wxt
+
+set xlabel "val (MHz)"
+set ylabel "g^{(2)} ({/Symbol t})"
+
+plot "out.txt" u 1:2 w l
+
+set terminal postscript eps enhanced color solid
+set output "plotg2.eps"
+replot
+unset output
+set terminal wxt
+
