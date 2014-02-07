@@ -155,7 +155,7 @@ int main(){
 	cd->gc=gc;
 
 
-	fstream fout;
+	fstream fout,fout2;
 	fout.open("gpout.txt",ios::out);
 	for(int i=0;i<1000;i++){
 		cd->gp=i*0.001*sqrt(1000);
@@ -164,6 +164,7 @@ int main(){
 		fout << i*0.001 << " " << cd->g2p << " " << cd->coherence << endl;
 	}
 	fout.close();cd->gp=gp*sqrt(N);
+
 	fout.open("gcout.txt",ios::out);
 	for(int i=0;i<1000;i++){
 		cd->gc=i*0.01;
@@ -172,6 +173,8 @@ int main(){
 		fout << i*0.01 << " " << cd->g2p << " " << cd->coherence << endl;
 	}
 	fout.close();cd->gc=gc;
+
+
 	fout.open("kpout.txt",ios::out);
 	for(int i=0;i<1000;i++){
 		cd->k1=i*0.01/2;
@@ -180,6 +183,7 @@ int main(){
 		fout << i*0.01 << " " << cd->g2p << " " << cd->coherence << endl;
 	}
 	fout.close();cd->k1=k1;
+
 	fout.open("kcout.txt",ios::out);
 	for(int i=0;i<1000;i++){
 		cd->k2=i*0.01/2;
@@ -187,7 +191,25 @@ int main(){
 		cd->compute();
 		fout << i*0.01 << " " << cd->g2p << " " << cd->coherence << endl;
 	}
-	fout.close();
+	fout.close();cd->k2=k2;
+
+	fout.open("gpgcg2out.txt",ios::out);
+	fout2.open("gpgccohout.txt",ios::out);
+	for(int i=0;i<100;i++){
+		for(int j=0;j<100;j++){
+			cd->gp=i*(10.0/sqrt(N)/100)*sqrt(N);
+			cd->gc=j*(2.0/100);
+			cd->init();
+			cd->compute();
+			fout << cd->g2p << " " ;
+			fout2 << cd->coherence << " ";
+		}
+		fout << endl;
+		fout2 << endl;
+		cout << i << endl;
+	}
+	fout2.close();
+	fout.close();cd->gc=gc;cd->gp=gp*sqrt(N);
 
 	delete cd;
 	return 0;
