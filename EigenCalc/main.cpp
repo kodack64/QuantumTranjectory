@@ -75,6 +75,13 @@ public:
 	double maxreal;
 	double secreal;
 	double coherence;
+	double trans;
+	double pos0;
+	double pos1;
+	double pos2;
+	double dark0;
+	double dark1;
+	double dark2;
 	Eigen::VectorXd eigenvecpos;
 	Eigen::VectorXcd eigenval;
 	virtual void compute(){
@@ -107,6 +114,21 @@ public:
 		g2p=2*eigenvecpos(mg20)/pow(eigenvecpos(mg10),2);
 		g2c=2*eigenvecpos(m2f02)/pow(eigenvecpos(mf01),2);
 		g2e=2*eigenvecpos(m2e00)/pow(eigenvecpos(me00),2);
+
+		pos0 = eigenvecpos(mg00);
+		pos1 = eigenvecpos(mg10)+eigenvecpos(me00)+eigenvecpos(mf01);
+		pos2 = eigenvecpos(mg20)+eigenvecpos(me10)+eigenvecpos(mf11)+eigenvecpos(mef01)+eigenvecpos(m2f02)+eigenvecpos(m2e00);
+
+		if(gp==0 && gc==0){
+			dark0=pos0;
+			dark1=dark2=0;
+		}else{
+			dark0 = pos0;
+			dark1 = norm((eigenvec(mg10)/sqrt(pos1)*gc-eigenvec(mf01)/sqrt(pos1)*gp)/sqrt(gp*gp+gc*gc));
+			dark2 = norm((eigenvec(mg20)/sqrt(pos2)*gc*gc/sqrt(2.0)-eigenvec(mf11)/sqrt(pos2)*gp*gc+0.5*gp*gp*eigenvec(m2f02))/sqrt(0.5*pow(gc,4)+gp*gp*gc*gc+0.25*pow(gp,4)/sqrt(pos2)));
+		}
+
+		trans=1.0/(1.0+ (gp*gp/k1/r) / (1.0+gc*gc/k2/r));
 	}
 	void consoleOut(){
 		cout << eigenval << endl;
@@ -155,7 +177,8 @@ int main(){
 	cd->gc=gc;
 
 
-	fstream fout,fout2;
+	fstream fout,fout2,fout3,fout4;
+	vector<fstream> fsv;
 	fout.open("gpout.txt",ios::out);
 	for(int i=0;i<1000;i++){
 		cd->gp=i*0.001*sqrt(1000);
@@ -193,23 +216,78 @@ int main(){
 	}
 	fout.close();cd->k2=k2;
 
-	fout.open("gpgcg2out.txt",ios::out);
-	fout2.open("gpgccohout.txt",ios::out);
-	for(int i=0;i<100;i++){
-		for(int j=0;j<100;j++){
-			cd->gp=i*(10.0/sqrt(N)/100)*sqrt(N);
-			cd->gc=j*(2.0/100);
-			cd->init();
-			cd->compute();
-			fout << cd->g2p << " " ;
-			fout2 << cd->coherence << " ";
+
+	fsv.resize(8);
+	fsv[0].open("gpgcg2p.txt",ios::out);
+	fsv[1].open("gpgccoh.txt",ios::out);
+	fsv[2].open("gpgctrans.txt",ios::out);
+	fsv[3].open("gpgcg2c.txt",ios::out);
+	fsv[4].open("gpgcg2pos.txt",ios::out);
+	fsv[5].open("gpgcdark1.txt",ios::out);
+	fsv[6].open("gpgcdark2.txt",ios::out);
+	fsv[7].open("gpgcdarkr.txt",ios::out);
+	for(int i=-1;i<100;i++){
+		for(int j=-1;j<100;j++){
+			if(i==-1){
+				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << j*(2.0/100) << " ";
+			}else if(j==-1){
+				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << i*(10.0/sqrt(N)/100)*sqrt(N) << " ";
+			}else{
+				cd->gp=i*(10.0/sqrt(N)/100)*sqrt(N);
+				cd->gc=j*(2.0/100);
+				cd->init();
+				cd->compute();
+				fsv[0] << cd->g2p << " " ;
+				fsv[1] << cd->coherence << " ";
+				fsv[2] << cd->trans << " ";
+				fsv[3] << cd->g2c << " ";
+				fsv[4] << cd->pos2 / (pow(cd->pos1,2)/2) << " ";
+				fsv[5] << cd->dark1 << " ";
+				fsv[6] << cd->dark2 << " ";
+				fsv[7] << cd->dark2/cd->dark1 << " ";
+			}
 		}
-		fout << endl;
-		fout2 << endl;
+		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;
 		cout << i << endl;
 	}
-	fout2.close();
-	fout.close();cd->gc=gc;cd->gp=gp*sqrt(N);
+	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
+	cd->gc=gc;cd->gp=gp*sqrt(N);
+
+	fsv.resize(8);
+	fsv[0].open("kpkcg2p.txt",ios::out);
+	fsv[1].open("kpkccoh.txt",ios::out);
+	fsv[2].open("kpkctrans.txt",ios::out);
+	fsv[3].open("kpkcg2c.txt",ios::out);
+	fsv[4].open("kpkcg2pos.txt",ios::out);
+	fsv[5].open("kpkcdark1.txt",ios::out);
+	fsv[6].open("kpkcdark2.txt",ios::out);
+	fsv[7].open("kpkcdarkr.txt",ios::out);
+	for(int i=-1;i<100;i++){
+		for(int j=-1;j<100;j++){
+			if(i==-1){
+				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << j*0.001 << " ";
+			}else if(j==-1){
+				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << i*0.01 << " ";
+			}else{
+				cd->k1=i*0.01/2;
+				cd->k2=j*0.001/2;
+				cd->init();
+				cd->compute();
+				fsv[0] << cd->g2p << " " ;
+				fsv[1] << cd->coherence << " ";
+				fsv[2] << cd->trans << " ";
+				fsv[3] << cd->g2c << " ";
+				fsv[4] << cd->pos2 / (pow(cd->pos1,2)/2) << " ";
+				fsv[5] << cd->dark1 << " ";
+				fsv[6] << cd->dark2 << " ";
+				fsv[7] << cd->dark2/cd->dark1 << " ";
+			}
+		}
+		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;
+		cout << i << endl;
+	}
+	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
+	cd->k1=k1;cd->k2=k2;
 
 	delete cd;
 	return 0;
