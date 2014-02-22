@@ -161,16 +161,16 @@ public:
 int main(){
 	int n=10;
 	double eps=1e-5;
-/*	double k1=1.0/2;
+	double k1=1.0/2;
 	double k2=0.03/2;
 	double r=6.0/2;
 	double gp=0.1;
-	double gc=1;*/
-	double k1=1000.0/2;
+	double gc=1;
+/*	double k1=1000.0/2;
 	double k2=1.0/2;
 	double r=3.0/2;
 	double gp=5;
-	double gc=10;
+	double gc=10;*/
 	int N=1000;
 
 	CalcDiagonal* cd = new CalcDiagonal();
