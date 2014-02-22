@@ -161,11 +161,16 @@ public:
 int main(){
 	int n=10;
 	double eps=1e-5;
-	double k1=1.0/2;
+/*	double k1=1.0/2;
 	double k2=0.03/2;
 	double r=6.0/2;
 	double gp=0.1;
-	double gc=1;
+	double gc=1;*/
+	double k1=1000.0/2;
+	double k2=1.0/2;
+	double r=3.0/2;
+	double gp=5;
+	double gc=10;
 	int N=1000;
 
 	CalcDiagonal* cd = new CalcDiagonal();
@@ -200,19 +205,19 @@ int main(){
 
 	fout.open("kpout.txt",ios::out);
 	for(int i=0;i<1000;i++){
-		cd->k1=i*0.01/2;
+		cd->k1=i*0.1/2;
 		cd->init();
 		cd->compute();
-		fout << i*0.01 << " " << cd->g2p << " " << cd->coherence << endl;
+		fout << i*0.1 << " " << cd->g2p << " " << cd->coherence << endl;
 	}
 	fout.close();cd->k1=k1;
 
 	fout.open("kcout.txt",ios::out);
 	for(int i=0;i<1000;i++){
-		cd->k2=i*0.01/2;
+		cd->k2=i*0.1/2;
 		cd->init();
 		cd->compute();
-		fout << i*0.01 << " " << cd->g2p << " " << cd->coherence << endl;
+		fout << i*0.1 << " " << cd->g2p << " " << cd->coherence << endl;
 	}
 	fout.close();cd->k2=k2;
 
@@ -229,9 +234,9 @@ int main(){
 	for(int i=-1;i<100;i++){
 		for(int j=-1;j<100;j++){
 			if(i==-1){
-				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << j*(2.0/100) << " ";
+//				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << j*(2.0/100) << " ";
 			}else if(j==-1){
-				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << i*(10.0/sqrt(N)/100)*sqrt(N) << " ";
+//				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << i*(10.0/sqrt(N)/100)*sqrt(N) << " ";
 			}else{
 				cd->gp=i*(10.0/sqrt(N)/100)*sqrt(N);
 				cd->gc=j*(2.0/100);
@@ -265,9 +270,9 @@ int main(){
 	for(int i=-1;i<100;i++){
 		for(int j=-1;j<100;j++){
 			if(i==-1){
-				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << j*0.001 << " ";
+//				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << j*0.001 << " ";
 			}else if(j==-1){
-				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << i*0.01 << " ";
+//				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << i*0.01 << " ";
 			}else{
 				cd->k1=i*0.01/2;
 				cd->k2=j*0.001/2;
