@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TransCalc", "TransCalc\Tran
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EigenCalc", "EigenCalc\EigenCalc.vcxproj", "{1EF8864C-E60B-4688-BF13-FF4E34516CAB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EigenSolve", "EigenSolve\EigenSolve.vcxproj", "{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +181,16 @@ Global
 		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Release|Win32.ActiveCfg = Release|Win32
 		{1EF8864C-E60B-4688-BF13-FF4E34516CAB}.Release|Win32.Build.0 = Release|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Debug|Win32.Build.0 = Debug|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Release|Any CPU.ActiveCfg = Release|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Release|Win32.ActiveCfg = Release|Win32
+		{2A619DA3-DEDB-4BA9-8FC6-1EB727F1169F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
