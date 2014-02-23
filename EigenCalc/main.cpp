@@ -222,7 +222,7 @@ int main(){
 	fout.close();cd->k2=k2;
 
 
-	fsv.resize(8);
+	fsv.resize(12);
 	fsv[0].open("gpgcg2p.txt",ios::out);
 	fsv[1].open("gpgccoh.txt",ios::out);
 	fsv[2].open("gpgctrans.txt",ios::out);
@@ -231,14 +231,18 @@ int main(){
 	fsv[5].open("gpgcdark1.txt",ios::out);
 	fsv[6].open("gpgcdark2.txt",ios::out);
 	fsv[7].open("gpgcdarkr.txt",ios::out);
-	for(int i=-1;i<100;i++){
-		for(int j=-1;j<100;j++){
+	fsv[8].open("gpgcpos1.txt",ios::out);
+	fsv[9].open("gpgcpos2.txt",ios::out);
+	fsv[10].open("gpgcg2dark.txt",ios::out);
+	fsv[11].open("gpgcg2e.txt",ios::out);
+	for(int i=1;i<100;i++){
+		for(int j=1;j<100;j++){
 			if(i==-1){
 //				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << j*(2.0/100) << " ";
 			}else if(j==-1){
 //				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << i*(10.0/sqrt(N)/100)*sqrt(N) << " ";
 			}else{
-				cd->gp=i*(10.0/sqrt(N)/100)*sqrt(N);
+				cd->gp=i*(5.0/sqrt(N)/100)*sqrt(N);
 				cd->gc=j*(2.0/100);
 				cd->init();
 				cd->compute();
@@ -246,10 +250,14 @@ int main(){
 				fsv[1] << cd->coherence << " ";
 				fsv[2] << cd->trans << " ";
 				fsv[3] << cd->g2c << " ";
-				fsv[4] << cd->pos2 / (pow(cd->pos1,2)/2) << " ";
+				fsv[4] << 2*cd->pos2 / (pow(cd->pos1,2)) << " ";
 				fsv[5] << cd->dark1 << " ";
 				fsv[6] << cd->dark2 << " ";
 				fsv[7] << cd->dark2/cd->dark1 << " ";
+				fsv[8] << cd->pos1 << " ";
+				fsv[9] << cd->pos2 << " ";
+				fsv[10] << 1 + (0.5*pow(cd->gp,4)/(pow(cd->gc,4)+2*cd->gp*cd->gp*cd->gc*cd->gc+0.5*pow(cd->gp,4))) << " ";
+				fsv[11] << cd->g2e << " ";
 			}
 		}
 		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;
