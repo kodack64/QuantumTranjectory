@@ -64,26 +64,11 @@ public:
 		mat(m2e00,me10) = mat(me10,m2e00) = complex<double>(0,sqrt(2)*gp);
 		mat(m2e00,mef01) = mat(mef01,m2e00) = complex<double>(0,sqrt(2)*gc);
 	}
-
-	double np1;
-	double np2;
-	double nc1;
-	double nc2;
-	double ne1;
-	double ne2;
-	double g2p;
-	double g2c;
-	double g2e;
+	double a0;
+	double a0d;
+	double b0;
+	double b0d;
 	double maxreal;
-	double secreal;
-	double coherence;
-	double trans;
-	double pos0;
-	double pos1;
-	double pos2;
-	double dark0;
-	double dark1;
-	double dark2;
 	Eigen::VectorXd eigenvecpos;
 	Eigen::VectorXcd eigenval;
 	virtual void compute(){
@@ -110,40 +95,16 @@ public:
 
 		Eigen::FullPivLU<Eigen::MatrixXcd> lu(mat);
 		Eigen::VectorXcd evec = lu.solve(eigenvec);
+		Eigen::VectorXcd evecd = mat*evec;
 
-		cout << eigenvec;
-		cout << endl << endl;
-		cout << evec;
-		cout << endl << endl;
-		cout << evec(mg10)/eigenvec(mg10) << endl;
-		cout << endl << endl;
-		cout << evec(mg20)/eigenvec(mg20) << endl;
-	}
-	void consoleOut(){
-		cout << eigenval << endl;
-		cout << "max eigen value	:" << maxreal << endl;
-		cout << "second eigen value	:" << secreal << endl;
-		cout << "coherence time		:" << coherence << "us" <<endl;
-		cout << "g00	:" << eigenvecpos(mg00) << endl;
-		cout << "g10	:" << eigenvecpos(mg10) << endl;
-		cout << "e00	:" << eigenvecpos(me00) << endl;
-		cout << "f01	:" << eigenvecpos(mf01) << endl;
-		cout << "g20	:" << eigenvecpos(mg20) << endl;
-		cout << "e10	:" << eigenvecpos(me10) << endl;
-		cout << "f11	:" << eigenvecpos(mf11) << endl;
-		cout << "ef01	:" << eigenvecpos(mef01) << endl;
-		cout << "2f02	:" << eigenvecpos(m2f02) << endl;
-		cout << "2e00	:" << eigenvecpos(m2e00) << endl;
-		cout << "sum	:" << eigenvecpos.sum() << endl;
-		cout << "np1	:" << np1 << endl;
-		cout << "nc1	:" << nc1 << endl;
-		cout << "ne1	:" << ne1 << endl;
-		cout << "np2	:" << np2 << endl;
-		cout << "nc2	:" << nc2 << endl;
-		cout << "ne2	:" << ne2 << endl;
-		cout << "g2p	:" << g2p << endl;
-		cout << "g2c	:" << g2c << endl;
-		cout << "g2e	:" << g2e << endl;
+		a0 = abs(eigenvec[mg10]);
+		a0d = abs(evec[mg10]);
+		b0 = abs(eigenvec[mg20]);
+		b0d = abs(evec[mg20]);
+
+//		cout << eigenvec << endl;
+//		cout << evecd << endl;
+//		_getch();
 	}
 };
 
@@ -169,20 +130,19 @@ int main(){
 	cd->r=r;
 	cd->gp=gp*sqrt(N);
 	cd->gc=gc;
-	cd->init();
-	cd->compute();
+//	cd->init();
+//	cd->compute();
 
 
-/*	vector<fstream> fsv;
-	fsv.resize(8);
-	fsv[0].open("gpgcg2p.txt",ios::out);
-	fsv[1].open("gpgccoh.txt",ios::out);
-	fsv[2].open("gpgctrans.txt",ios::out);
-	fsv[3].open("gpgcg2c.txt",ios::out);
-	fsv[4].open("gpgcg2pos.txt",ios::out);
-	fsv[5].open("gpgcdark1.txt",ios::out);
-	fsv[6].open("gpgcdark2.txt",ios::out);
-	fsv[7].open("gpgcdarkr.txt",ios::out);
+	vector<fstream> fsv;
+	fsv.resize(7);
+	fsv[0].open("gpgca0.txt",ios::out);
+	fsv[1].open("gpgca0d.txt",ios::out);
+	fsv[2].open("gpgcb0.txt",ios::out);
+	fsv[3].open("gpgcb0d.txt",ios::out);
+	fsv[4].open("gpgca0da0.txt",ios::out);
+	fsv[5].open("gpgcb0db0.txt",ios::out);
+	fsv[6].open("gpgcdif.txt",ios::out);
 	for(int i=-1;i<100;i++){
 		for(int j=-1;j<100;j++){
 			if(i==-1){
@@ -194,22 +154,19 @@ int main(){
 				cd->gc=j*(2.0/100);
 				cd->init();
 				cd->compute();
-				fsv[0] << cd->g2p << " " ;
-				fsv[1] << cd->coherence << " ";
-				fsv[2] << cd->trans << " ";
-				fsv[3] << cd->g2c << " ";
-				fsv[4] << cd->pos2 / (pow(cd->pos1,2)/2) << " ";
-				fsv[5] << cd->dark1 << " ";
-				fsv[6] << cd->dark2 << " ";
-				fsv[7] << cd->dark2/cd->dark1 << " ";
+				fsv[0] << cd->a0 << " " ;
+				fsv[1] << cd->a0d << " " ;
+				fsv[2] << cd->b0 << " " ;
+				fsv[3] << cd->b0d << " " ;
+				fsv[4] << cd->a0d/cd->a0 << " " ;
+				fsv[5] << cd->b0d/cd->b0 << " " ;
+				fsv[6] << cd->b0d/cd->b0 - 2 * cd->a0d/cd->a0 << " " ;
 			}
 		}
 		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;
 		cout << i << endl;
 	}
 	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
-	cd->gc=gc;cd->gp=gp*sqrt(N);
-	*/
 	delete cd;
 	return 0;
 }
