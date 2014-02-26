@@ -82,6 +82,7 @@ public:
 	double dark0;
 	double dark1;
 	double dark2;
+	Eigen::VectorXcd eigenvec;
 	Eigen::VectorXd eigenvecpos;
 	Eigen::VectorXcd eigenval;
 	virtual void compute(){
@@ -98,7 +99,7 @@ public:
 		}
 		sort(reals.rbegin(),reals.rend());
 		double secreal = reals[1];
-		Eigen::VectorXcd eigenvec = es.eigenvectors().col(maxind);
+		eigenvec = es.eigenvectors().col(maxind);
 		eigenvecpos = Eigen::VectorXd(n);
 		for(int i=0;i<n;i++){
 			eigenvecpos(i) = norm(eigenvec(i));
@@ -222,7 +223,7 @@ int main(){
 	fout.close();cd->k2=k2;
 
 
-	fsv.resize(12);
+	fsv.resize(14);
 	fsv[0].open("gpgcg2p.txt",ios::out);
 	fsv[1].open("gpgccoh.txt",ios::out);
 	fsv[2].open("gpgctrans.txt",ios::out);
@@ -235,6 +236,8 @@ int main(){
 	fsv[9].open("gpgcpos2.txt",ios::out);
 	fsv[10].open("gpgcg2dark.txt",ios::out);
 	fsv[11].open("gpgcg2e.txt",ios::out);
+	fsv[12].open("gpgcmg20.txt",ios::out);
+	fsv[13].open("gpgcmg20i.txt",ios::out);
 	for(int i=1;i<100;i++){
 		for(int j=1;j<100;j++){
 			if(i==-1){
@@ -258,6 +261,8 @@ int main(){
 				fsv[9] << cd->pos2 << " ";
 				fsv[10] << 1 + (0.5*pow(cd->gp,4)/(pow(cd->gc,4)+2*cd->gp*cd->gp*cd->gc*cd->gc+0.5*pow(cd->gp,4))) << " ";
 				fsv[11] << cd->g2e << " ";
+				fsv[12] << cd->eigenvec[mg20].real() << " ";
+				fsv[13] << cd->eigenvec[mg20].imag() << " ";
 			}
 		}
 		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;

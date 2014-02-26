@@ -68,9 +68,13 @@ public:
 	double a0d;
 	double b0;
 	double b0d;
+	double g2p;
 	double maxreal;
+
+	Eigen::VectorXcd eigenvec;
 	Eigen::VectorXd eigenvecpos;
 	Eigen::VectorXcd eigenval;
+	Eigen::VectorXcd evec;
 	virtual void compute(){
 		Eigen::ComplexEigenSolver<Eigen::MatrixXcd> es(mat);
 		eigenval =  es.eigenvalues();
@@ -83,24 +87,41 @@ public:
 			maxreal=reals[i];
 			maxind=i;
 		}
-		Eigen::VectorXcd eigenvec = es.eigenvectors().col(maxind);
+		cout << eigenval(maxind) << endl;
+		eigenvec = es.eigenvectors().col(maxind);
 
-		eigenvec[mg00]*=0;
-		eigenvec[mg20]*=2;
-		eigenvec[me10]*=2;
-		eigenvec[mf11]*=2;
-		eigenvec[mef01]*=2;
-		eigenvec[m2f02]*=2;
-		eigenvec[m2e00]*=2;
+		eigenvecpos = Eigen::VectorXd(n);
+		for(int i=0;i<n;i++){
+			eigenvecpos(i) = norm(eigenvec(i));
+		}
+		Eigen::VectorXcd eigenvecsub = Eigen::VectorXcd(n);
+		for(int i=0;i<n;i++){
+			eigenvecsub(i) = eigenvec(i);
+		}
+		eigenvecsub[mg00]*=0;
+		eigenvecsub[mg20]*=2;
+		eigenvecsub[me10]*=2;
+		eigenvecsub[mf11]*=2;
+		eigenvecsub[mef01]*=2;
+		eigenvecsub[m2f02]*=2;
+		eigenvecsub[m2e00]*=2;
+
+		g2p=2*eigenvecpos(mg20)/pow(eigenvecpos(mg10),2);
 
 		Eigen::FullPivLU<Eigen::MatrixXcd> lu(mat);
-		Eigen::VectorXcd evec = lu.solve(eigenvec);
-		Eigen::VectorXcd evecd = mat*evec;
+		evec = lu.solve(eigenvecsub);
+//		cout << eigenvec << endl;
+//		cout << evec << endl;
+//		cout << eigenvecsub << endl;
+//		cout << mat*evec << endl;
+//		_getch();
+//
+//		Eigen::VectorXcd evecd = mat*evec;
 
-		a0 = abs(eigenvec[mg10]);
-		a0d = abs(evec[mg10]);
-		b0 = abs(eigenvec[mg20]);
-		b0d = abs(evec[mg20]);
+//		a0 = abs(eigenvec[mg10]);
+//		a0d = abs(evec[mg10]);
+//		b0 = abs(eigenvec[mg20]);
+//		b0d = abs(evec[mg20]);
 
 //		cout << eigenvec << endl;
 //		cout << evecd << endl;
@@ -110,7 +131,7 @@ public:
 
 int main(){
 	int n=10;
-	double eps=1e-5;
+	double eps=1e-4;
 	double k1=1.0/2;
 	double k2=0.03/2;
 	double r=6.0/2;
@@ -130,6 +151,41 @@ int main(){
 	cd->r=r;
 	cd->gp=gp*sqrt(N);
 	cd->gc=gc;
+/*
+	double sigma2=25*25;
+
+	fstream fs("test.txt",ios::out);
+	for(double t=-50;t<50;t+=0.1){
+		double delta = -t/sigma2;
+		double gauss =1e-3*exp(-t*t/(2*sigma2))/sqrt(2*M_PI*sigma2);
+
+		cd->eps=gauss;
+		cd->init();
+		cd->compute();
+
+		double dds = pow(norm(cd->eigenvec[mg10]),2);
+		double ddu = 2*norm(cd->eigenvec[mg20]);
+		double g2s = ddu/dds;
+
+		Eigen::VectorXcd vec = cd->eigenvec + delta*cd->evec;
+
+		double nu=2*norm(vec[mg20]);
+		double nd=pow(norm(vec[mg10]),2);
+		double g2d = nu/nd;
+
+		complex<double> b0=cd->eigenvec[mg20];
+		complex<double> b0d=cd->evec[mg20];
+
+//		double ns = pow(norm(cd->eigenvec[mg10]-delta*cd->evec[mg10]),2);
+//		double nu = 2*norm(cd->eigenvec[mg20]-delta*cd->evec[mg20]);
+//		double g2d = nu/ns;
+		cout << t << " " << g2s << " " << g2d << endl;
+		fs << t << " " << g2s << " " << g2d << " " << nu << " " << nd << " " << abs(b0) << " " << abs(b0d) << " " << g2s*(1+2*delta*abs(b0d/b0)/2/M_PI) << endl;
+//		cout << vec << endl;
+//		_getch();
+	}
+	fs.close();
+*/
 //	cd->init();
 //	cd->compute();
 
@@ -154,19 +210,23 @@ int main(){
 				cd->gc=j*(2.0/100);
 				cd->init();
 				cd->compute();
-				fsv[0] << cd->a0 << " " ;
-				fsv[1] << cd->a0d << " " ;
-				fsv[2] << cd->b0 << " " ;
-				fsv[3] << cd->b0d << " " ;
-				fsv[4] << cd->a0d/cd->a0 << " " ;
-				fsv[5] << cd->b0d/cd->b0 << " " ;
-				fsv[6] << cd->b0d/cd->b0 - 2 * cd->a0d/cd->a0 << " " ;
+//				fsv[0] << cd->a0 << " " ;
+//				fsv[1] << cd->a0d << " " ;
+//				fsv[2] << cd->b0 << " " ;
+//				fsv[3] << cd->b0d << " " ;
+//				fsv[4] << cd->a0d/cd->a0 << " " ;
+//				fsv[5] << cd->b0d/cd->b0 << " " ;
+//				fsv[6] << cd->b0d/cd->b0 - 2 * cd->a0d/cd->a0 << " " ;
+				fsv[2] << cd->eigenvec[mg20].real() << " " ;
+				fsv[3] << cd->evec[mg20].real() << " " ;
+				fsv[6] << cd->evec[mg20].imag() / cd->eigenvec[mg20].real() << " " ;
 			}
 		}
 		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;
 		cout << i << endl;
 	}
 	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
+
 	delete cd;
 	return 0;
 }
