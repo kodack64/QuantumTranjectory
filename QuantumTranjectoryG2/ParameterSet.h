@@ -43,6 +43,8 @@ public:
 		param["pulseDetune"] = "0e-1";
 		param["pulseWidth"] = "1e1";
 		param["pulseCut"] = "6";
+		param["pulseShape"] = "0";
+		param["pulseExp"] = "0.01";
 
 		param["coherenceProbe"] = "1e-1";
 		param["coherenceControl"]  ="1e-0";

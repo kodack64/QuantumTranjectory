@@ -102,6 +102,10 @@ private:
 	double pulseWidth;
 	//パルスを打ち切る倍率
 	double pulseCut;
+	//パルスの形状 0 gauss 1 triangle 2 exponential
+	int pulseShape;
+	//パルスの指数関数の係数
+	double pulseExp;
 
 	//相互作用の強さ
 	double coherenceProbe;

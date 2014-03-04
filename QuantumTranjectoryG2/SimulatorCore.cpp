@@ -14,12 +14,17 @@ void Simulator::calcPulseSize(){
 	// usePulse=trueならパルスの形状が三角関数になるように変形
 	if(usePulse){
 		double pos = dt*step-pulseWidth*pulseCut/2;
-//		if(dt*step<pulseWidth) pos = pulseWidth - pulseWidth*pulseCut/2;
-		double val = exp(-pos*pos/(2*pulseWidth*pulseWidth))/sqrt(2*3.14159)/pulseWidth;
+		double val;
+
+		if(pulseShape==0)val = exp(-pos*pos/(2*pulseWidth*pulseWidth))/sqrt(2*3.14159)/pulseWidth;
+		if(pulseShape==1)val = (dt*step<pulseWidth*pulseCut)?(1-abs(pos)/(pulseWidth*pulseCut/2))/(pulseWidth*pulseCut/2):0;
+		if(pulseShape==2)val = exp(-((abs(pos)<pulseWidth*5)?pulseWidth*5:abs(pos))*pulseExp);
+		else val=0;
+
 		pulse*=sqrt(val);
 
-//		ofstream ofs("pulse2.txt",ios::app);
-//		ofs << val << endl;
+//		ofstream ofs("pulse.txt",ios::app);
+//		ofs << dt*step << " " << val << endl;
 //		ofs.close();
 
 /*
