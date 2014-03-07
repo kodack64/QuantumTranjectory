@@ -307,6 +307,19 @@ int main(){
 	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
 	cd->k1=k1;cd->k2=k2;
 
+	fsv.resize(1);
+	fsv[0].open("g20_p.txt",ios::out);
+	for(int i=-1000;i<1000;i++){
+		cd->k1=k1+i*0.001/2;
+		cd->k2=k2+i*0.001/2;
+		cd->r=r+i*0.001;
+		cd->init();
+		cd->compute();
+		fsv[0] << i*0.001 << " " << cd->g2p << " " << cd->coherence << endl;
+	}
+	fsv[0].close();
+	cd->k1=k1;cd->k2=k2;cd->r=r;
+
 	delete cd;
 	return 0;
 }
