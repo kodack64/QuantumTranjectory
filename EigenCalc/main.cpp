@@ -308,16 +308,36 @@ int main(){
 	cd->k1=k1;cd->k2=k2;
 
 	fsv.resize(1);
-	fsv[0].open("g20_p.txt",ios::out);
-	for(int i=-1000;i<1000;i++){
-		cd->k1=k1+i*0.001/2;
-		cd->k2=k2+i*0.001/2;
-		cd->r=r+i*0.001;
-		cd->init();
-		cd->compute();
-		fsv[0] << i*0.001 << " " << cd->g2p << " " << cd->coherence << endl;
+	fsv[0].open("gpgcg2pu.txt",ios::out);
+	cd->k1=k1+0.05;cd->k2=k2+0.05;cd->r=r+0.05;
+	for(int i=1;i<100;i++){
+		for(int j=1;j<100;j++){
+			cd->gp=i*(5.0/sqrt(N)/100)*sqrt(N);
+			cd->gc=j*(2.0/100);
+			cd->init();
+			cd->compute();
+			fsv[0] << cd->g2p << " " ;
+		}
+		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;
+		cout << i << endl;
 	}
 	fsv[0].close();
+	fsv[0].open("gpgcg2pd.txt",ios::out);
+	cd->k1=k1-0.01;cd->k2=k2-0.01;cd->r=r-0.01;
+	for(int i=1;i<100;i++){
+		for(int j=1;j<100;j++){
+			cd->gp=i*(5.0/sqrt(N)/100)*sqrt(N);
+			cd->gc=j*(2.0/100);
+			cd->init();
+			cd->compute();
+			fsv[0] << cd->g2p << " " ;
+		}
+		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;
+		cout << i << endl;
+	}
+	fsv[0].close();
+
+
 	cd->k1=k1;cd->k2=k2;cd->r=r;
 
 	delete cd;
