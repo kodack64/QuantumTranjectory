@@ -59,17 +59,21 @@ void Simulator::calcLiuville(){
 		// probe‘¤‚Ì‘ŠŒÝì—p
 		if(pg>0 && ae<maxAE){
 			dif[i]+=img*coherenceProbe*sqrt(pg)*sqrt(ae+1)*sqrt(totAtom-ae-af)*state[i-indPG+indAE];
+//			dif[i]+=img*coherenceProbe*sqrt(pg)*sqrt(ae+1)*sqrt(totAtom)*state[i-indPG+indAE];
 		}
 		if(pg<maxPG && ae>0){
 			dif[i]+=img*coherenceProbe*sqrt(pg+1)*sqrt(ae)*sqrt(totAtom-ae-af+1)*state[i+indPG-indAE];
+//			dif[i]+=img*coherenceProbe*sqrt(pg+1)*sqrt(ae)*sqrt(totAtom)*state[i+indPG-indAE];
 		}
 
 		// control‘¤‚Ì‘ŠŒÝì—p
 		if(pf>0 && af>0 && ae<maxAE){
 			dif[i]+=img*coherenceControl*sqrt(pf)*sqrt(af)*sqrt(ae+1)*state[i-indPF-indAF+indAE];
+//			dif[i]+=img*coherenceControl*sqrt(pf)*sqrt(ae+1)*state[i-indPF-indAF+indAE];
 		}
 		if(pf<maxPF && af<maxAF && ae>0){
 			dif[i]+=img*coherenceControl*sqrt(pf+1)*sqrt(af+1)*sqrt(ae)*state[i+indPF+indAF-indAE];
+//			dif[i]+=img*coherenceControl*sqrt(pf+1)*sqrt(ae)*state[i+indPF+indAF-indAE];
 		}
 	}
 	for(i=0;i<vecSize;i++)state[i]+=dif[i]*dt;
