@@ -76,6 +76,8 @@ public:
 	double secreal;
 	double coherence;
 	double trans;
+	double transcav;
+	double transspn;
 	double pos0;
 	double pos1;
 	double pos2;
@@ -130,6 +132,11 @@ public:
 		}
 
 		trans=1.0/(1.0+ (gp*gp/k1/r) / (1.0+gc*gc/k2/r));
+		double a1a0 = fabs(gp*k2/(gc*gc+r*k2));
+		double a2a0 = fabs(gp*gc/(gc*gc+r*k2));
+		transspn = trans*a1a0*sqrt(r/k1);
+		transcav = trans*a2a0*sqrt(k2/k1);
+//		cout << a2a0 << " " << gc/gp << endl;
 	}
 	void consoleOut(){
 		cout << eigenval << endl;
@@ -185,7 +192,8 @@ int main(){
 
 	fstream fout,fout2,fout3,fout4;
 	vector<fstream> fsv;
-	fout.open("gpout.txt",ios::out);
+
+/*	fout.open("gpout.txt",ios::out);
 	for(int i=0;i<1000;i++){
 		cd->gp=i*0.001*sqrt(1000);
 		cd->init();
@@ -222,7 +230,49 @@ int main(){
 	}
 	fout.close();cd->k2=k2;
 
+	fout.open("gakushin.txt",ios::out);
+	for(int i=0;i<1000;i++){
+		cd->gc=i*0.01;
+		cd->init();
+		cd->compute();
+		fout << i*0.01 << " " << cd->g2p << " " << cd->g2c << " " << cd->trans << endl;
+	}
+	fout.close();cd->gc=gc;
+	*/
+	
+	fout.open("sc.txt",ios::out);
+	for(int i=0;i<3000;i++){
+		cd->gc=sqrt(i*0.01*cd->r*cd->k2);
+		cd->init();
+		cd->compute();
+		fout << cd->gc*cd->gc/cd->r/cd->k2 << " " << cd->g2p  << " " << cd->g2c << " " << cd->g2e << 
+			" " << pow(cd->trans,2) << " " << pow(cd->transcav,2) << " " << pow(cd->transspn,2) << endl;
+	}
+	fout.close();cd->gc=gc;
 
+	fsv.resize(1);
+	fsv[0].open("scmat.txt",ios::out);
+	for(int i=1;i<100;i++){
+		for(int j=1;j<100;j++){
+			if(i==-1){
+//				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << j*(2.0/100) << " ";
+			}else if(j==-1){
+//				for(unsigned int k=0;k<fsv.size();k++)fsv[k] << i*(10.0/sqrt(N)/100)*sqrt(N) << " ";
+			}else{
+				cd->gp=sqrt(i*0.002*cd->r*cd->k1*sqrt(N));
+				cd->gc=sqrt(j*0.3*cd->r*cd->k2);
+				cd->init();
+				cd->compute();
+				fsv[0] << cd->g2p << " " ;
+			}
+		}
+		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;
+		cout << i << endl;
+	}
+	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
+	cd->gc=gc;cd->gp=gp*sqrt(N);
+
+/*
 	fsv.resize(14);
 	fsv[0].open("gpgcg2p.txt",ios::out);
 	fsv[1].open("gpgccoh.txt",ios::out);
@@ -336,7 +386,7 @@ int main(){
 		cout << i << endl;
 	}
 	fsv[0].close();
-
+	*/
 
 	cd->k1=k1;cd->k2=k2;cd->r=r;
 
