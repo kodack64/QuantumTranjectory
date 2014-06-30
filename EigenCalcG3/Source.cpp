@@ -34,7 +34,7 @@ using namespace std;
 #define m3e00 18
 #define m2ef01 19
 
-const int n=10;
+const int n=20;
 
 class CalcDiagonal{
 public:
@@ -47,12 +47,15 @@ public:
 	Eigen::MatrixXcd mat;
 	void init(){
 		mat = Eigen::MatrixXcd::Zero(n,n);
+		// m=0 ロス
 		mat(mg00,mg00)=0;
 
+		// m=1 ロス
 		mat(mg10,mg10)=-k1;
 		mat(me00,me00)=-r;
 		mat(mf01,mf01)=-k2;
-	
+
+		// m=2 ロス
 		mat(mg20,mg20)=-2*k1;
 		mat(me10,me10)=-k1-r;
 		mat(mf11,mf11)=-k1-k2;
@@ -60,14 +63,39 @@ public:
 		mat(m2f02,m2f02)=-2*k2;
 		mat(m2e00,m2e00)=-2*r;
 
+		// m=3 ロス
+		mat(mg30,mg30)=-3*k1;
+		mat(me20,me20)=-2*k1-r;
+		mat(mf21,mf21)=-2*k1-k2;
+		mat(mef11,mef11)=-k1-r-k2;
+		mat(m2f12,m2f12)=-k1-2*k2;
+		mat(me2f02,me2f02)=-r-2*k2;
+		mat(m3f03,m3f03)=-3*k2;
+		mat(m2e10,m2e10)=-2*r-k1;
+		mat(m3e00,m3e00)=-3*r;
+		mat(m2ef01,m2ef01)=-2*r-k2;
+
+		// m=0 励起
 		mat(mg00,mg10) = mat(mg10,mg00) = complex<double>(0,eps);
+
+		// m=1 励起
 		mat(mg10,mg20) = mat(mg20,mg10) = complex<double>(0,sqrt(2)*eps);
 		mat(me00,me10) = mat(me10,me00) = complex<double>(0,eps);
 		mat(mf01,mf11) = mat(mf11,mf01) = complex<double>(0,eps);
 
+		// m=2 励起
+		mat(mg20,mg30) = mat(mg30,mg20) = complex<double>(0,sqrt(3)*eps);
+		mat(me10,me20) = mat(me20,me10) = complex<double>(0,sqrt(2)*eps);
+		mat(mf11,mf21) = mat(mf21,mf11) = complex<double>(0,sqrt(2)*eps);
+		mat(mef01,mef11) = mat(mef11,mef01) = complex<double>(0,eps);
+		mat(m2f02,m2f12) = mat(m2f12,m2f02) = complex<double>(0,eps);
+		mat(m2e00,m2e10) = mat(m2e10,m2e00) = complex<double>(0,eps);
+
+		// m=1 coh
 		mat(mg10,me00) = mat(me00,mg10) = complex<double>(0,gp);
 		mat(mf01,me00) = mat(me00,mf01) = complex<double>(0,gc);
 
+		// m=2 coh
 		mat(mg20,me10) = mat(me10,mg20) = complex<double>(0,sqrt(2)*gp);
 		mat(mf11,me10) = mat(me10,mf11) = complex<double>(0,gc);
 		mat(mf11,mef01) = mat(mef01,mf11) = complex<double>(0,gp);
@@ -75,6 +103,22 @@ public:
 
 		mat(m2e00,me10) = mat(me10,m2e00) = complex<double>(0,sqrt(2)*gp);
 		mat(m2e00,mef01) = mat(mef01,m2e00) = complex<double>(0,sqrt(2)*gc);
+
+		// m=3 coh
+		mat(mg30,me20) = mat(me20,mg30) = complex<double>(0,sqrt(3)*gp);
+		mat(me20,mf21) = mat(mf21,me20) = complex<double>(0,sqrt(1)*gc);
+		mat(mf21,mef11) = mat(mef11,mf21) = complex<double>(0,sqrt(2)*gp);
+		mat(mef11,m2f12) = mat(m2f12,mef11) = complex<double>(0,sqrt(4)*gc);
+		mat(m2f12,me2f02) = mat(me2f02,m2f12) = complex<double>(0,sqrt(1)*gp);
+		mat(me2f02,m3f03) = mat(m3f03,me2f02) = complex<double>(0,sqrt(9)*gc);
+
+		mat(me20,m2e10) = mat(m2e10,me20) = complex<double>(0,sqrt(4)*gp);
+		mat(m2e10,mef11) = mat(mef11,m2e10) = complex<double>(0,sqrt(2)*gc);
+		mat(mef11,m2ef01) = mat(m2ef01,mef11) = complex<double>(0,sqrt(2)*gp);
+		mat(m2ef01,me2f02) = mat(me2f02,mef01) = complex<double>(0,sqrt(8)*gc);
+
+		mat(m2e10,m3e00) = mat(m3e00,m2e10) = complex<double>(0,sqrt(3)*gp);
+		mat(m3e00,m2ef01) = mat(m2ef01,m3e00) = complex<double>(0,sqrt(3)*gc);
 	}
 
 	double np1;
@@ -86,6 +130,9 @@ public:
 	double g2p;
 	double g2c;
 	double g2e;
+	double g3p;
+	double g3c;
+	double g3e;
 	double maxreal;
 	double secreal;
 	double coherence;
@@ -131,6 +178,10 @@ public:
 		g2p=2*eigenvecpos(mg20)/pow(eigenvecpos(mg10),2);
 		g2c=2*eigenvecpos(m2f02)/pow(eigenvecpos(mf01),2);
 		g2e=2*eigenvecpos(m2e00)/pow(eigenvecpos(me00),2);
+
+		g3p=6*eigenvecpos(mg30)/pow(eigenvecpos(mg10),3);
+		g3c=6*eigenvecpos(m3f03)/pow(eigenvecpos(mf01),3);
+		g3e=6*eigenvecpos(m3e00)/pow(eigenvecpos(me00),3);
 
 		pos0 = eigenvecpos(mg00);
 		pos1 = eigenvecpos(mg10)+eigenvecpos(me00)+eigenvecpos(mf01);
@@ -181,8 +232,8 @@ public:
 };
 
 int main(){
-	int n=10;
-	double eps=1e-5;
+	int n=20;
+	double eps=1e-3;
 	double k1=1.0/2;
 	double k2=0.03/2;
 	double r=6.0/2;
@@ -254,18 +305,27 @@ int main(){
 	fout.close();cd->gc=gc;
 	*/
 	
-	fout.open("sc.txt",ios::out);
+	fsv.resize(4);
+	fsv[0].open("g2p.txt",ios::out);
+	fsv[1].open("g3p.txt",ios::out);
+	cd->gp = 0.050*sqrt(N);
 	for(int i=0;i<3000;i++){
 		cd->gc=sqrt(i*0.01*cd->r*cd->k2);
 		cd->init();
 		cd->compute();
-		fout << cd->gc*cd->gc/cd->r/cd->k2 << " " << cd->g2p  << " " << cd->g2c << " " << cd->g2e << 
+		fsv[0] << cd->gc*cd->gc/cd->r/cd->k2 << " " << cd->g2p  << " " << cd->g2c << " " << cd->g2e << 
 			" " << pow(cd->trans,2) << " " << pow(cd->transcav,2) << " " << pow(cd->transspn,2) << endl;
+		fsv[1] << cd->gc*cd->gc/cd->r/cd->k2 << " " << cd->g3p  << " " << cd->g3c << " " << cd->g3e << endl;
 	}
-	fout.close();cd->gc=gc;
+	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
+	cd->gc=gc;
+	cd->gp = gp*sqrt(N);
 
-	fsv.resize(1);
-	fsv[0].open("scmat.txt",ios::out);
+/*	fsv.resize(4);
+	fsv[0].open("g2pmat.txt",ios::out);
+	fsv[1].open("g3pmat.txt",ios::out);
+	fsv[2].open("g3cmat.txt",ios::out);
+	fsv[3].open("g3emat.txt",ios::out);
 	for(int i=1;i<100;i++){
 		for(int j=1;j<100;j++){
 			if(i==-1){
@@ -278,6 +338,9 @@ int main(){
 				cd->init();
 				cd->compute();
 				fsv[0] << cd->g2p << " " ;
+				fsv[1] << cd->g3p << " " ;
+				fsv[2] << cd->g3c << " " ;
+				fsv[3] << cd->g3e << " " ;
 			}
 		}
 		for(unsigned int k=0;k<fsv.size();k++)fsv[k] << endl;
@@ -285,7 +348,7 @@ int main(){
 	}
 	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
 	cd->gc=gc;cd->gp=gp*sqrt(N);
-
+*/
 /*
 	fsv.resize(14);
 	fsv[0].open("gpgcg2p.txt",ios::out);
