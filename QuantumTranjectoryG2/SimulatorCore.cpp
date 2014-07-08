@@ -17,15 +17,16 @@ void Simulator::calcPulseSize(){
 		double val;
 
 		if(pulseShape==0)val = exp(-pos*pos/(2*pulseWidth*pulseWidth))/sqrt(2*3.14159)/pulseWidth;
-		if(pulseShape==1)val = (dt*step<pulseWidth*pulseCut)?(1-abs(pos)/(pulseWidth*pulseCut/2))/(pulseWidth*pulseCut/2):0;
-		if(pulseShape==2)val = exp(-((abs(pos)<pulseWidth*5)?pulseWidth*5:abs(pos))*pulseExp);
+		else if(pulseShape==1)val = (dt*step<pulseWidth*pulseCut)?(1-abs(pos)/(pulseWidth*pulseCut/2))/(pulseWidth*pulseCut/2):0;
+		else if(pulseShape==2)val = exp(-((abs(pos)<pulseWidth*5)?pulseWidth*5:abs(pos))*pulseExp);
+		else if(pulseShape==3)val = pulseExp*exp(-dt*step/pulseWidth);
 		else val=0;
 
 		pulse*=sqrt(val);
 
-//		ofstream ofs("pulse.txt",ios::app);
-//		ofs << dt*step << " " << val << endl;
-//		ofs.close();
+/*		ofstream ofs("pulse.txt",ios::app);
+		ofs << dt*step << " " << val << endl;
+		ofs.close();*/
 
 /*
 		if(dt*step<pulseWidth){

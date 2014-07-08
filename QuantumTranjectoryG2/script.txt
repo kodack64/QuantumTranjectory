@@ -1,2 +1,2 @@
 load parameter.txt
-execute 30
+execute 10000000

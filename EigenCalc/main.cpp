@@ -253,7 +253,17 @@ int main(){
 	}
 	fout.close();cd->gc=gc;
 	*/
-	
+	fout.open("ch.txt",ios::out);
+	for(int i=0;i<3000;i++){
+		cd->gp=1.0;
+		cd->gc=0;
+		cd->init();
+		cd->compute();
+		fout << cd->gc*cd->gc/cd->r/cd->k2 << " " << cd->g2p  << " " << cd->g2c << " " << cd->g2e << 
+			" " << pow(cd->trans,2) << " " << pow(cd->transcav,2) << " " << pow(cd->transspn,2) << endl;
+	}
+	fout.close();cd->gc=gc;
+
 	fout.open("sc.txt",ios::out);
 	for(int i=0;i<3000;i++){
 		cd->gc=sqrt(i*0.01*cd->r*cd->k2);
@@ -285,6 +295,7 @@ int main(){
 	}
 	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
 	cd->gc=gc;cd->gp=gp*sqrt(N);
+
 
 /*
 	fsv.resize(14);

@@ -1,4 +1,4 @@
-core 1
+core 8
 
 maxPG 6
 maxAE 6
@@ -10,31 +10,32 @@ useLossProbe true
 useLossControl true
 useLossAtom true
 
-postselProbe true
-postselControl true
-postselAtom true
+postselProbe false
+postselControl false
+postselAtom false
 forceLossProbeTime -1
 
 usePulse true
 
-dt 1e-2
-maxstep 120000
+dt 1e-4
+maxstep 100
 
 loggingUnit 1
 loggingTime true
-loggingProb true
-loggingJump true
+loggingProb false
+loggingJump false
 
-pulsePump 1.5e-2
+pulsePump 0.8e1
 pulseDetune 0e-2
-pulseWidth 2e1
-pulseCut 24
-pulseShape 2
+pulseWidth 1e0
+pulseCut 1
+pulseShape 3
+pulseExp 1.0e0
 
-coherenceProbe 1e-1
-coherenceControl 1e0
+coherenceProbe 5e0
+coherenceControl 1e1
 
-lossProbe 1e0
-lossControl 3e-2
-lossAtom 6e-0
-eps 1e-12
+lossProbe 1e3
+lossControl 1e0
+lossAtom 3e-0
+eps 1e-3

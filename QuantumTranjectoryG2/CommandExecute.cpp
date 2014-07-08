@@ -6,6 +6,8 @@
 #include <iostream>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
+#include <Shlwapi.h>
+#pragma comment(lib,"ShLwApi.Lib")
 using namespace std;
 
 #ifdef _OPENMP
@@ -50,6 +52,12 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 	// 並列計算時はスレッドを分割し計算
 #ifdef _OPENMP
 	int count=0;
+	for(count=0;count<i_repeatNum;count++){
+		stringstream sstest;
+		sstest << "data\\log_" << i_unit << "_" << count << "_time_probe.txt";
+		if(PathFileExistsA(sstest.str().c_str())==0)break;
+	}
+
 	int totLossPG=0;
 	int totLossPF=0;
 	int totLossAE=0;
@@ -64,7 +72,7 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 		int lossPF=0;
 		int lossAE=0;
 		double maxEdge=0;
-		Simulator* sim = new Simulator();
+		Simulator* sim;
 		while(true){
 #pragma omp critical
 			{
@@ -81,16 +89,17 @@ void CommandExecute::execute(ParameterSet* par,queue<Command*>& coms){
 				}
 			}
 			if(myid==-1)break;
+			sim = new Simulator();
 			sim->execute(i_unit,myid,par);
 			lossPG = sim->getTotalProbeLossCount();
 			lossPF = sim->getTotalControlLossCount();
 			lossAE = sim->getTotalAtomLossCount();
 			maxEdge = sim->getMaxEdge();
+			delete sim;
 			cout << " #" << mycore << " result * pg" << lossPG << " pf" << lossPF << " ae" << lossAE << " edge" << maxEdge <<  endl;
 		}
 #pragma omp critical
 		cout << " #" << mycore << "end" << endl;
-		delete sim;
 	}
 
 #else

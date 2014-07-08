@@ -23,7 +23,7 @@ void Simulator::checkCondition(){
 	//ステップ数の終了チェック
 	if(step>maxstep)endFlag=true;
 	//パルスを入射した場合、パルスが入りきった後にシステム内のエネルギーが一定以下になったら終了
-//	if(usePulse && energy<eps && dt*step>pulseWidth*pulseCut)endFlag=true;
+	if(usePulse && energy<eps && dt*step>pulseWidth*pulseCut)endFlag=true;
 
 	//キーボードが押された場合、途中で中断したり中間状態を出力したりする
 #ifdef _MSC_VER
@@ -33,9 +33,9 @@ void Simulator::checkCondition(){
 			cout << "# aborted" << endl;
 			endFlag = true;
 
-			ofstream ofs("analyze\\g2exp.txt",ios::app);
+/*			ofstream ofs("analyze\\g2exp.txt",ios::app);
 			ofs << -pulseExp << " " << g2ValueLogProbe[g2ValueLogProbe.size()-1] << endl;
-			ofs.close();
+			ofs.close();*/
 
 		}
 		if(c==VK_SPACE){
@@ -103,13 +103,13 @@ void Simulator::logging(){
 			g2ValueLogControl.push_back(g2Control);
 		}
 	}
-	if(pulseShape==2){
+/*	if(pulseShape==2){
 		if(-pulseWidth*5.1 < dt*step-pulseWidth*pulseCut/2 && dt*step-pulseWidth*pulseCut/2 < -pulseWidth*5.1+dt*1.1){
 			ofstream ofs("analyze\\g2exp.txt",ios::app);
 			ofs << pulseExp << " " << g2ValueLogProbe[g2ValueLogProbe.size()-1] << endl;
 			ofs.close();
 		}
-	}
+	}*/
 }
 
 // ログ書き込み
