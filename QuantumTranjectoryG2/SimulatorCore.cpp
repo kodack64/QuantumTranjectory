@@ -109,6 +109,8 @@ void Simulator::calcProbabiliyOfLoss(){
 	probLossProbe*=dt*lossProbe;
 	probLossControl*=dt*lossControl;
 
+	totalProbLoss+= probLossAtom + probLossProbe+probLossControl;
+
 	// 乱数を利用してロスが起きるかどうかを判定
 	flagLossAtom = (useLossAtom)&(r->next()<probLossAtom)&(!postselAtom);
 	flagLossProbe = (useLossProbe)&(r->next()<probLossProbe)&(!postselProbe);
@@ -175,6 +177,7 @@ void Simulator::calcProjection(){
 		}
 	}
 
+
 	//ロスがなかった時の期待値の補正
 	//あと対角和とシステム中のエネルギー量の計算
 	trace=0;
@@ -189,23 +192,26 @@ void Simulator::calcProjection(){
 		pg = getIdToPG(i);
 		pf = getIdToPF(i);
 		if(!flagLossAtom){
-			state[i]-=0.5*ae*lossAtom*dt*state[i];
+			state[i]*=(1-0.5*ae*lossAtom*dt);
 		}
 		if(!flagLossProbe){
-			state[i]-=0.5*pg*lossProbe*dt*state[i];
+			state[i]*=(1-0.5*pg*lossProbe*dt);
 		}
 		if(!flagLossControl){
-			state[i]-=0.5*pf*lossControl*dt*state[i];
+			state[i]*=(1-0.5*pf*lossControl*dt);
 		}
 		trace+=norm(state[i]);
 		energy+=norm(state[i])*(ae+pg+pf);
 	}
+//	totalShrink += tracedec;
+//	cout << tracedec << " " << totalShrink << " " << totalProbLoss << " " << 1-trace << endl;
 
 	//正規化
 	double g2atoma=0;
 	double g2probea=0;
 	double g2controla=0;
 	g2Probe=g2Atom=g2Control=0;
+	energy1=energy2=0;
 	double enepf[20];
 	for(i=0;i<20;i++)enepf[i]=0;
 	trace=sqrt(trace);
@@ -215,7 +221,11 @@ void Simulator::calcProjection(){
 	for(i=0;i<=maxPF;i++)energyValueLogControl[i].push_back(0);
 	for(i=0;i<=maxAE;i++)energyValueLogAtom[i].push_back(0);
 
+	if(flagLossAtom || flagLossProbe || flagLossControl) totalShrink=0;
+	else totalShrink += (1-trace*trace);
+
 	for(i=0;i<vecSize;i++){
+
 		state[i]/=trace;
 
 		ae = getIdToAE(i);
@@ -228,6 +238,9 @@ void Simulator::calcProjection(){
 		g2atoma+=ae*norm(state[i]);
 		g2controla+=pf*norm(state[i]);
 		g2probea+=pg*norm(state[i]);
+
+		if(ae+pg+pf==1 && pf==af) energy1 += norm(state[i]);
+		if(ae+pg+pf==2 && pf==af) energy2 += norm(state[i]);
 
 		enepf[pf]+=norm(state[i]);
 		if(loggingProb){
@@ -250,11 +263,32 @@ void Simulator::calcProjection(){
 	g2Control/=pow(g2controla,2);
 	g2Probe/=pow(g2probea,2);
 
+	double gp=coherenceProbe*sqrt(1.0*totAtom);
+	double gc=coherenceControl;
+
+	darkfidelity1 = norm((state[indPG]*gc - state[indAF+indPF]*gp) / sqrt(pow(gp,2)+pow(gc,2))) / energy1; 
+
+	darkfidelity2 = 
+		norm(
+		(gc*gc*state[2*indPG]/sqrt(2) - gp*gc*state[indPG+indPF+indAF] + 0.5*gp*gp*state[2*(indPF+indAF)])
+		/sqrt(0.5*pow(gc,4) + pow(gc*gp,2) + 0.25*pow(gp,4))
+		)/energy2;
+
+	//darkmatch1 = norm((eigenvec(mg10)*gc-eigenvec(mf01)*gp)/sqrt(gp*gp+gc*gc))/pos1;
+	//darkmatch2 = norm((eigenvec(mg20)*gc*gc/sqrt(2.0)-eigenvec(mf11)*gp*gc+eigenvec(m2f02)*gp*gp*0.5)/sqrt(0.5*pow(gc,4)+gp*gp*gc*gc+0.25*pow(gp,4)))/pos2;
+
+
 /*	if(step%1000 == 0){
 		for(int i=0;i<10;i++){
 			cout << i << ":" << enepf[i] << endl;
 		}
 	}*/
+
+/*	trace=0;
+	for(i=0;i<vecSize;i++){
+		trace+=norm(state[i]);
+	}
+	cout << "trace : " << trace << endl;*/
 
 	if(flagLossProbe){
 		if(forceLossProbeTime==step){

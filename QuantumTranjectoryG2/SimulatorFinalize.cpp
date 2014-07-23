@@ -43,11 +43,20 @@ void Simulator::checkCondition(){
 			cout << "#  energy : " << energy << endl;
 			cout << "#  step : " << step << " / " << maxstep << endl;
 			cout << "#  prob : " << probLossProbe << endl;
-			cout << "#  edgepg : " << edgePG << endl;
-			cout << "#  edgeae : " << edgeAE << endl;
-			cout << "#  edgepf : " << edgePF << endl;
-			cout << "#  edgeaf : " << edgeAF << endl;
-			cout << "#  edgeall : " << edgeAll << endl;
+//			cout << "#  edgepg : " << edgePG << endl;
+//			cout << "#  edgeae : " << edgeAE << endl;
+//			cout << "#  edgepf : " << edgePF << endl;
+//			cout << "#  edgeaf : " << edgeAF << endl;
+//			cout << "#  edgeall : " << edgeAll << endl;
+
+			cout << "#  mg00  :" << norm(state[0]) << state[0] << endl;
+			cout << "#  mg10  :" << norm(state[indPG]) << state[indPG] << endl;
+			cout << "#  me00  :" << norm(state[indAE]) << state[indAE] << endl;
+			cout << "#  mf01  :" << norm(state[indAF+indPF]) << state[indAF+indPF] << endl;
+			cout << "#  mg20  :" << norm(state[indPG*2]) << state[indPG*2] << endl;
+			cout << "#  mf11  :" << norm(state[indPG+indAF+indPF]) << state[indPG+indAF+indPF] << endl;
+			cout << "#  m2f02 :" << norm(state[2*(indAF+indPF)]) << state[2*(indAF+indPF)] << endl;
+
 			cout << "#  AllEne ";
 			for(int i=0;i<min(maxEne,4);i++){
 				cout << energyValueLogAll[i][energyValueLogAll[i].size()-1] << " ";
@@ -110,6 +119,22 @@ void Simulator::logging(){
 			ofs.close();
 		}
 	}*/
+
+	{
+		if(step%100==0){
+			fstream fs("templog.txt",ios::app);
+			fs << dt*step << " "
+				<< totalShrink << " "
+				<< totalProbLoss << " "
+				<< g2Probe << " " 
+				<< 2*energy2/pow(energy1,2) << " " 
+				<< darkfidelity1 << " "
+				<< darkfidelity2 << 
+				endl;
+			fs.close();
+		}
+	}
+
 }
 
 // ƒƒO‘‚«ž‚Ý

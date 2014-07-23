@@ -89,15 +89,23 @@ public:
 	double maxreal;
 	double secreal;
 	double coherence;
-	double trans;
+	double transpro;
 	double transcav;
 	double transspn;
+	double transprotheory;
+	double transcavtheory;
+	double transspntheory;
 	double pos0;
 	double pos1;
 	double pos2;
 	double dark0;
 	double dark1;
 	double dark2;
+	double energyg2;
+	double darkmatch1;
+	double darkmatch2;
+	double darkmatchg2;
+	double darkmatchg2theory;
 	Eigen::VectorXcd eigenvec;
 	Eigen::VectorXd eigenvecpos;
 	Eigen::VectorXcd eigenval;
@@ -132,24 +140,46 @@ public:
 		g2c=2*eigenvecpos(m2f02)/pow(eigenvecpos(mf01),2);
 		g2e=2*eigenvecpos(m2e00)/pow(eigenvecpos(me00),2);
 
+		// 各mごとのエネルギー
 		pos0 = eigenvecpos(mg00);
 		pos1 = eigenvecpos(mg10)+eigenvecpos(me00)+eigenvecpos(mf01);
 		pos2 = eigenvecpos(mg20)+eigenvecpos(me10)+eigenvecpos(mf11)+eigenvecpos(mef01)+eigenvecpos(m2f02)+eigenvecpos(m2e00);
 
+		// ダーク状態との重なり
 		if(gp==0 && gc==0){
 			dark0=pos0;
 			dark1=dark2=0;
+			darkmatch1=0;
+			darkmatch2=0;
 		}else{
 			dark0 = pos0;
 			dark1 = norm((eigenvec(mg10)/sqrt(pos1)*gc-eigenvec(mf01)/sqrt(pos1)*gp)/sqrt(gp*gp+gc*gc));
 			dark2 = norm((eigenvec(mg20)/sqrt(pos2)*gc*gc/sqrt(2.0)-eigenvec(mf11)/sqrt(pos2)*gp*gc+0.5*gp*gp*eigenvec(m2f02))/sqrt(0.5*pow(gc,4)+gp*gp*gc*gc+0.25*pow(gp,4)/sqrt(pos2)));
-		}
 
-		trans=1.0/(1.0+ (gp*gp/k1/r) / (1.0+gc*gc/k2/r));
-		double a1a0 = fabs(gp*k2/(gc*gc+r*k2));
-		double a2a0 = fabs(gp*gc/(gc*gc+r*k2));
-		transspn = trans*a1a0*sqrt(r/k1);
-		transcav = trans*a2a0*sqrt(k2/k1);
+			darkmatch1 = norm((eigenvec(mg10)*gc-eigenvec(mf01)*gp)/sqrt(gp*gp+gc*gc))/pos1;
+			darkmatch2 = norm((eigenvec(mg20)*gc*gc/sqrt(2.0)-eigenvec(mf11)*gp*gc+eigenvec(m2f02)*gp*gp*0.5)/sqrt(0.5*pow(gc,4)+gp*gp*gc*gc+0.25*pow(gp,4)))/pos2;
+			darkmatchg2 = (pow(pos1,2)/pos2)*eigenvecpos(mg20)/pow(eigenvecpos(mg10),2);
+			darkmatchg2theory = 1 + 0.5*pow(gp,4)/(pow(gc,4)+2*pow(gp*gc,2)+0.5*pow(gp,4));
+		}
+		energyg2 = 2*pos2/pow(pos1,2);
+
+		// 透過率
+		double etap = gp*gp/k1/r;
+		double etac = gc*gc/k2/r;
+		transprotheory = pow((1.0+etac)/(1+etap+etac),2);
+		transspntheory = pow((gp/r)/(1+etap+etac),2)*r/k1;
+		transcavtheory = pow((gp*gc/r/k2)/(1+etap+etac),2)*k2/k1;
+
+		transpro = transprotheory;
+		double transbase = (np1+np2)*k1*2;
+		transspn = transpro * (ne1+ne2)*r*2 / transbase;
+		transcav = transpro * (nc1+nc2)*k2*2 / transbase;
+
+		// 共振器と原子からのロス比
+//		double a1a0 = fabs(gp*k2/(gc*gc+r*k2));
+//		double a2a0 = fabs(gp*gc/(gc*gc+r*k2));
+//		transspn = trans*a1a0*sqrt(r/k1);
+//		transcav = trans*a2a0*sqrt(k2/k1);
 //		cout << a2a0 << " " << gc/gp << endl;
 	}
 	void consoleOut(){
@@ -181,19 +211,30 @@ public:
 };
 
 int main(){
-	int n=10;
 	double eps=1e-5;
-	double k1=1.0/2;
-	double k2=0.03/2;
-	double r=6.0/2;
 	double gp=0.1;
-	double gc=1;
+	double gc=1.0;
+	double k1=1.0/2; // half
+	double k2=0.03/2; // half 
+	double r=6.0/2; // half
 /*	double k1=1000.0/2;
 	double k2=1.0/2;
 	double r=3.0/2;
 	double gp=5;
 	double gc=10;*/
 	int N=1000;
+
+	fstream fs("_config.txt",ios::in);
+	if(fs && !fs.bad()){
+		string str;
+		stringstream ss;
+		getline(fs,str);ss << (str);ss >> gp;ss.str("");
+		getline(fs,str);ss << (str);ss >> gc;ss.str("");
+		getline(fs,str);ss << (str);ss >> k1;ss.str("");
+		getline(fs,str);ss << (str);ss >> k2;ss.str("");
+		getline(fs,str);ss << (str);ss >> r;ss.str("");
+		fs.close();
+	}
 
 	CalcDiagonal* cd = new CalcDiagonal();
 	cd->eps=eps;
@@ -253,7 +294,8 @@ int main(){
 	}
 	fout.close();cd->gc=gc;
 	*/
-	fout.open("ch.txt",ios::out);
+
+/*	fout.open("ch.txt",ios::out);
 	for(int i=0;i<3000;i++){
 		cd->gp=1.0;
 		cd->gc=0;
@@ -263,8 +305,20 @@ int main(){
 			" " << pow(cd->trans,2) << " " << pow(cd->transcav,2) << " " << pow(cd->transspn,2) << endl;
 	}
 	fout.close();cd->gc=gc;
+	*/
 
-	fout.open("sc.txt",ios::out);
+	fout.open("darkmatch.txt",ios::out);
+	for(int i=0;i<10000;i++){
+//		cd->gc=sqrt(i*0.01*cd->r*cd->k2);
+		cd->gc=i*0.001;
+		cd->init();
+		cd->compute();
+//		fout << cd->gc*cd->gc/cd->r/cd->k2 << " " << cd->energyg2 << " " << cd->darkmatch1 << " " << cd->darkmatch2 << " " << cd->darkmatchg2 << " " << cd->darkmatchg2theory << " " << cd->g2p << endl;
+		fout << cd->gc << " " << cd->energyg2 << " " << cd->darkmatch1 << " " << cd->darkmatch2 << " " << cd->darkmatchg2 << " " << cd->darkmatchg2theory << " " << cd->g2p << " " << cd->transpro << " " << cd->transcav << " " << cd->transspn << endl;
+	}
+	fout.close();cd->gc=gc;cd->gp=gp;
+
+/*	fout.open("sc.txt",ios::out);
 	for(int i=0;i<3000;i++){
 		cd->gc=sqrt(i*0.01*cd->r*cd->k2);
 		cd->init();
@@ -273,6 +327,7 @@ int main(){
 			" " << pow(cd->trans,2) << " " << pow(cd->transcav,2) << " " << pow(cd->transspn,2) << endl;
 	}
 	fout.close();cd->gc=gc;
+
 
 	fsv.resize(1);
 	fsv[0].open("scmat.txt",ios::out);
@@ -295,8 +350,7 @@ int main(){
 	}
 	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
 	cd->gc=gc;cd->gp=gp*sqrt(N);
-
-
+	*/
 /*
 	fsv.resize(14);
 	fsv[0].open("gpgcg2p.txt",ios::out);

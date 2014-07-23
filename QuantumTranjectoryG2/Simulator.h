@@ -150,6 +150,12 @@ private:
 	double g2Probe;
 	double g2Control;
 	double g2Atom;
+	double energy1;
+	double energy2;
+	double darkfidelity1;
+	double darkfidelity2;
+	double totalShrink;
+	double totalProbLoss;
 	int loggingOffset;
 
 	// id‚ğU‚é‚½‚ß‚Ì”
