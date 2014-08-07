@@ -1,0 +1,9 @@
+0.1		gp
+1.0		gc
+1.0		kp
+0.03	kc
+6.0		gamma
+1e-3	eps
+1000	totalAtom
+3		maxene
+out1.txt	output

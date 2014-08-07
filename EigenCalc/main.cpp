@@ -71,6 +71,7 @@ public:
 		mat(mg20,me10) = mat(me10,mg20) = complex<double>(0,sqrt(2)*gp);
 		mat(mf11,me10) = mat(me10,mf11) = complex<double>(0,gc);
 		mat(mf11,mef01) = mat(mef01,mf11) = complex<double>(0,gp);
+//		mat(m2f02,mef01) = mat(mef01,m2f02) = complex<double>(0,sqrt(2)*gc);
 		mat(m2f02,mef01) = mat(mef01,m2f02) = complex<double>(0,2*gc);
 
 		mat(m2e00,me10) = mat(me10,m2e00) = complex<double>(0,sqrt(2)*gp);
@@ -307,7 +308,7 @@ int main(){
 	fout.close();cd->gc=gc;
 	*/
 
-	fout.open("darkmatch.txt",ios::out);
+/*	fout.open("darkmatch.txt",ios::out);
 	for(int i=0;i<10000;i++){
 //		cd->gc=sqrt(i*0.01*cd->r*cd->k2);
 		cd->gc=i*0.001;
@@ -315,6 +316,25 @@ int main(){
 		cd->compute();
 //		fout << cd->gc*cd->gc/cd->r/cd->k2 << " " << cd->energyg2 << " " << cd->darkmatch1 << " " << cd->darkmatch2 << " " << cd->darkmatchg2 << " " << cd->darkmatchg2theory << " " << cd->g2p << endl;
 		fout << cd->gc << " " << cd->energyg2 << " " << cd->darkmatch1 << " " << cd->darkmatch2 << " " << cd->darkmatchg2 << " " << cd->darkmatchg2theory << " " << cd->g2p << " " << cd->transpro << " " << cd->transcav << " " << cd->transspn << endl;
+	}
+	fout.close();cd->gc=gc;cd->gp=gp;
+	*/
+
+	fout.open("darkmatchcheck.txt",ios::out);
+	for(int i=0;i<10000;i++){
+		cd->gc=i*0.001;
+		cd->init();
+		cd->compute();
+		fout << cd->gc << " " 
+			<< cd->eigenvecpos[mg10] << " " 
+			<< cd->eigenvecpos[me00] << " " 
+			<< cd->eigenvecpos[mf01] << " " 
+			<< cd->eigenvecpos[mg20] << " " 
+			<< cd->eigenvecpos[mf11] << " " 
+			<< cd->eigenvecpos[m2f02] << " " 
+			<< cd->pos1 << " "
+			<< cd->pos2 << " "
+			<<endl;
 	}
 	fout.close();cd->gc=gc;cd->gp=gp;
 
