@@ -319,7 +319,6 @@ int main(){
 	}
 	fout.close();cd->gc=gc;cd->gp=gp;
 	*/
-
 	fout.open("darkmatchcheck.txt",ios::out);
 	for(int i=0;i<10000;i++){
 		cd->gc=i*0.001;
@@ -334,6 +333,12 @@ int main(){
 			<< cd->eigenvecpos[m2f02] << " " 
 			<< cd->pos1 << " "
 			<< cd->pos2 << " "
+			<< pow(cd->np1,2)/2 << " "
+			<< pow(cd->nc1,2)/2 << " "
+			<< pow(cd->ne1,2)/2 << " "
+			<< cd->np2 << " "
+			<< cd->nc2 << " "
+			<< cd->ne2 << " "
 			<<endl;
 	}
 	fout.close();cd->gc=gc;cd->gp=gp;
