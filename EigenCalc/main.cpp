@@ -245,7 +245,6 @@ int main(){
 	cd->gp=gp*sqrt(N);
 	cd->gc=gc;
 
-
 	fstream fout,fout2,fout3,fout4;
 	vector<fstream> fsv;
 
