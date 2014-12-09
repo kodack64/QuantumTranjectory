@@ -114,4 +114,24 @@ public:
 	virtual void execute(ParameterSet*,queue<Command*>&) override;
 };
 
+class CommandCalc1Photon : public Command{
+private:
+	virtual void calcG2(string base, string jump, string out, int jumpStep, double logDiv, int i_unit, string name);
+public:
+	CommandCalc1Photon()
+	{}
+	virtual void execute(ParameterSet*, queue<Command*>&) override;
+};
+
+
+class CommandCalc2Photon : public Command{
+private:
+	virtual void calcG2(string base, string jump, string out, int jumpStep, double logDiv, int i_unit, string name);
+public:
+	CommandCalc2Photon()
+	{}
+	virtual void execute(ParameterSet*, queue<Command*>&) override;
+};
+
+
 
