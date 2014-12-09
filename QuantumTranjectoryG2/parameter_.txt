@@ -1,0 +1,41 @@
+core 8
+
+maxPG 8
+maxAE 8
+maxPF 8
+maxAF 8
+totAtom 1000
+
+useLossProbe true
+useLossControl true
+useLossAtom true
+
+postselProbe true
+postselControl true
+postselAtom true
+forceLossProbeTime 10000
+
+usePulse true
+
+dt 5e-3
+maxstep 10000000
+
+loggingUnit 1
+loggingTime false
+loggingProb true
+loggingJump false
+
+pulsePump 0.5e-1
+pulseDetune 0e-2
+pulseWidth 1e1
+pulseCut 8
+pulseShape 0
+pulseExp 1.0e0
+
+coherenceProbe 1e-1
+coherenceControl 0.5e0
+
+lossProbe 1e0
+lossControl 3e-2
+lossAtom 6e-0
+eps 1e-6
