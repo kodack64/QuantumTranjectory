@@ -32,6 +32,7 @@ private:
 	virtual void close();
 	virtual void releaseParameter();
 	virtual void loggingSave();
+	virtual void loggingLast();
 
 	// id‚©‚ç—Êq”‚ğæ“¾‚·‚éƒ}ƒNƒ
 	inline int getIdToPG(int i){return (i%indAE)/indPG;}
@@ -139,6 +140,7 @@ private:
 	vector<double> g2ValueLogProbe;
 	vector<double> g2ValueLogControl;
 	vector<double> g2ValueLogAtom;
+	vector<double> logPulse;
 	vector<vector<double>> energyValueLogProbe;
 	vector<vector<double>> energyValueLogControl;
 	vector<vector<double>> energyValueLogAll;
@@ -156,6 +158,7 @@ private:
 	double darkfidelity2;
 	double totalShrink;
 	double totalProbLoss;
+	double trajectoryWeight;
 	int loggingOffset;
 
 	// id‚ğU‚é‚½‚ß‚Ì”

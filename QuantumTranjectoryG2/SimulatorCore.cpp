@@ -25,7 +25,7 @@ void Simulator::calcPulseSize(){
 		pulse*=sqrt(val);
 
 /*		ofstream ofs("pulse.txt",ios::app);
-		ofs << dt*step << " " << val << endl;
+		ofs << dt*step << " " << abs(pulse) << endl;
 		ofs.close();*/
 
 /*
@@ -223,6 +223,9 @@ void Simulator::calcProjection(){
 
 	if(flagLossAtom || flagLossProbe || flagLossControl) totalShrink=0;
 	else totalShrink += (1-trace*trace);
+
+	if(!flagLossProbe)trajectoryWeight *=(1.0-probLossProbe);
+	else trajectoryWeight*=probLossProbe;
 
 	for(i=0;i<vecSize;i++){
 

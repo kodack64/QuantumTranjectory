@@ -110,6 +110,7 @@ void Simulator::logging(){
 			g2ValueLogAtom.push_back(g2Atom);
 			g2ValueLogProbe.push_back(g2Probe);
 			g2ValueLogControl.push_back(g2Control);
+			logPulse.push_back(abs(pulse));
 		}
 	}
 /*	if(pulseShape==2){
@@ -219,6 +220,13 @@ void Simulator::loggingSave(){
 			if(ofs.bad()){cout << "bad alloc " << endl;}
 			ofs.close();
 
+			ofs.open(ss.str()+"pulse_shape.txt",iomode);
+			for(i=0;i<logPulse.size();i++){
+				ofs << (loggingOffset+i)*loggingUnit*dt << " " <<  logPulse[i] << endl;
+			}
+			if(ofs.bad()){cout << "bad alloc " << endl;}
+			ofs.close();
+
 			ofs.open(ss.str()+"ene_probe.txt",iomode);
 			for(i=0;i<energyValueLogProbe[0].size();i++){
 				ofs << (loggingOffset+i)*loggingUnit*dt << " ";
@@ -246,6 +254,7 @@ void Simulator::loggingSave(){
 		lossTimeLogProbe.clear();
 		lossProbabilityLogProbe.clear();
 		g2ValueLogProbe.clear();
+		logPulse.clear();
 		for(int j=0;j<maxPG;j++)energyValueLogProbe[j].clear();
 		for(int j=0;j<maxEne;j++)energyValueLogAll[j].clear();
 	}
@@ -295,6 +304,13 @@ void Simulator::loggingSave(){
 
 	loggingOffset +=newOffset;
 
+}
+void Simulator::loggingLast(){
+	stringstream ss;
+	ss << "data\\log_";
+	ofstream ofs(ss.str()+"weight.txt",ios::app);
+	ofs << forceLossProbeTime*dt << " " << trajectoryWeight << endl;
+	ofs.close();
 }
 
 //確保したオブジェクトを解放

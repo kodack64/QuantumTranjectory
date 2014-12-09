@@ -116,9 +116,10 @@ public:
 
 class CommandCalc1Photon : public Command{
 private:
-	virtual void calcG2(string base, string jump, string out, int jumpStep, double logDiv, int i_unit, string name);
+	string time1;
 public:
-	CommandCalc1Photon()
+	CommandCalc1Photon(string _time1)
+		:time1(_time1)
 	{}
 	virtual void execute(ParameterSet*, queue<Command*>&) override;
 };
@@ -126,9 +127,12 @@ public:
 
 class CommandCalc2Photon : public Command{
 private:
-	virtual void calcG2(string base, string jump, string out, int jumpStep, double logDiv, int i_unit, string name);
+	string time1;
+	string time2;
 public:
-	CommandCalc2Photon()
+	CommandCalc2Photon(string _time1,string _time2)
+		:time1(_time1),
+		time2(_time2)
 	{}
 	virtual void execute(ParameterSet*, queue<Command*>&) override;
 };

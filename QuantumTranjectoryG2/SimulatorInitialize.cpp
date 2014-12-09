@@ -84,6 +84,7 @@ void Simulator::initParameter(){
 	lossProbabilityLogAtom.clear();
 	lossProbabilityLogControl.clear();
 	lossProbabilityLogProbe.clear();
+	logPulse.clear();
 	g2ValueLogAtom.clear();
 	g2ValueLogControl.clear();
 	g2ValueLogProbe.clear();
@@ -106,6 +107,7 @@ void Simulator::initParameter(){
 	maxEdge=0;
 	totalShrink=0;
 	totalProbLoss=0;
+	trajectoryWeight=1.0;
 
 	// ÉÅÉÇÉäóÃàÊÇÃämï€
 //	r=new Random(seed);

@@ -219,3 +219,14 @@ void CommandCalcG2::calcG2(string base,string jump,string out,int jumpStep , dou
 	ojump << i_unit << " " << jumpval << " " << tau << endl;
 	ojump.close();
 }
+
+
+void CommandCalc1Photon::execute(ParameterSet* par,queue<Command*>& coms){
+	Simulator* sim = new Simulator();
+	par->setParam("forceLossProbeTime","0.001");
+	sim->execute(0,0,par);
+}
+
+void CommandCalc2Photon::execute(ParameterSet* par,queue<Command*>& coms){
+}
+

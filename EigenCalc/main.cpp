@@ -509,6 +509,7 @@ int main(){
 	}
 	fout.close();cd->gc=gc;cd->gp=gp;
 */
+	/*
 	fout.open("elements.txt",ios::out);
 	for(int i=0;i<3000;i++){
 		cd->gc=i*0.001;
@@ -528,19 +529,35 @@ int main(){
 			<<endl;
 	}
 	fout.close();cd->gc=gc;cd->gp=gp;
+	*/
+	fout.open("elements_not_norm.txt",ios::out);
+	for(int i=0;i<3000;i++){
+		cd->gc=i*0.001;
+		cd->init();
+		cd->compute();
+		fout << cd->gc*cd->gc/cd->k2/cd->r << " " 
+			<< norm(cd->eigenvecpos(1)) << " "
+			<< norm(cd->eigenvecpos(2)) << " "
+			<< norm(cd->eigenvecpos(3)) << " "
+			<< norm(cd->eigenvecpos(4)) << " "
+			<< norm(cd->eigenvecpos(9)) << " "
+			<< norm(cd->eigenvecpos(8)) << " "
+			<< cd->coherence << " " 
+			<< cd->darkmatchg2 << " "
+			<<endl;
+	}
+	fout.close();cd->gc=gc;cd->gp=gp;
 
-
-	
-/*	fout.open("sc.txt",ios::out);
+	/*
+	fout.open("sc.txt",ios::out);
 	for(int i=0;i<3000;i++){
 		cd->gc=sqrt(i*0.01*cd->r*cd->k2);
 		cd->init();
 		cd->compute();
 		fout << cd->gc*cd->gc/cd->r/cd->k2 << " " << cd->g2p  << " " << cd->g2c << " " << cd->g2e << 
-			" " << pow(cd->trans,2) << " " << pow(cd->transcav,2) << " " << pow(cd->transspn,2) << endl;
+			" " << pow(cd->transpro,2) << " " << pow(cd->transcav,2) << " " << pow(cd->transspn,2) << endl;
 	}
 	fout.close();cd->gc=gc;
-
 
 	fsv.resize(1);
 	fsv[0].open("scmat.txt",ios::out);
@@ -564,7 +581,7 @@ int main(){
 	for(unsigned int k=0;k<fsv.size();k++)fsv[k].close();
 	cd->gc=gc;cd->gp=gp*sqrt(N);
 	*/
-/*
+	/*
 	fsv.resize(14);
 	fsv[0].open("gpgcg2p.txt",ios::out);
 	fsv[1].open("gpgccoh.txt",ios::out);

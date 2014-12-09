@@ -35,5 +35,6 @@ void Simulator::run(){
 // ƒƒ‚ƒŠ‚Ì‰ğ•ú
 void Simulator::close(){
 	loggingSave();
+	loggingLast();
 	releaseParameter();
 }

@@ -78,21 +78,21 @@ void CommandFactory::setCommandFunc(){
 			return (Command*)NULL;
 		}
 	}));
-	funcmap.insert(make_pair("1pulse", [](vector<string> words){
+	funcmap.insert(make_pair("1photon", [](vector<string> words){
 		if (words.size() == 2){
-			return (Command*)(new CommandCalc1Pulse(words.at(1)));
+			return (Command*)(new CommandCalc1Photon(words.at(1)));
 		}
 		else{
-			cout << "# format : 1pulse <time>" << endl;
+			cout << "# format : 1photon <time>" << endl;
 			return (Command*)NULL;
 		}
 	}));
-	funcmap.insert(make_pair("2pulse", [](vector<string> words){
+	funcmap.insert(make_pair("2photon", [](vector<string> words){
 		if (words.size() == 3){
-			return (Command*)(new CommandCalc2Pulse(words.at(1),words.at(2)));
+			return (Command*)(new CommandCalc2Photon(words.at(1),words.at(2)));
 		}
 		else{
-			cout << "# format : 2pulse <time1> <time2>" << endl;
+			cout << "# format : 2photon <time1> <time2>" << endl;
 			return (Command*)NULL;
 		}
 	}));
